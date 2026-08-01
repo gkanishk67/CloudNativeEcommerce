@@ -33,3 +33,27 @@ jobs:
 
       - name: Run Unit Tests
         run: dotnet test --no-build --configuration Release
+
+      - name: Build IdentityService Docker Image
+        run: |
+          docker build \
+            -t cloudnativeecommerce-identityservice:latest \
+            -f src/IdentityService/Dockerfile .
+
+      - name: Build ProductService Docker Image
+        run: |
+          docker build \
+            -t cloudnativeecommerce-productservice:latest \
+            -f src/ProductService/Dockerfile .
+
+      - name: Build OrderService Docker Image
+        run: |
+          docker build \
+            -t cloudnativeecommerce-orderservice:latest \
+            -f src/OrderService/Dockerfile .
+
+      - name: Build ApiGateway Docker Image
+        run: |
+          docker build \
+            -t cloudnativeecommerce-apigateway:latest \
+            -f src/ApiGateway/Dockerfile .
