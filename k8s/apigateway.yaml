@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: apigateway
+  namespace: cloudnativeecommerce
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: apigateway
+
+  template:
+    metadata:
+      labels:
+        app: apigateway
+
+    spec:
+      containers:
+      - name: apigateway
+
+        image: cloudnativeecommerce-apigateway:latest
+        imagePullPolicy: Never
+
+        ports:
+        - containerPort: 8080
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+---
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: apigateway
+  namespace: cloudnativeecommerce
+
+spec:
+  selector:
+    app: apigateway
+
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+  type: ClusterIP

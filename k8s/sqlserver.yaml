@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: sqlserver-secret
+  namespace: cloudnativeecommerce
+
+type: Opaque
+
+stringData:
+  SA_PASSWORD: "YourStrong@Passw0rd"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: sqlserver
+  namespace: cloudnativeecommerce
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: sqlserver
+
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+
+    spec:
+      containers:
+      - name: sqlserver
+
+        image: mcr.microsoft.com/mssql/server:2022-latest
+
+        ports:
+        - containerPort: 1433
+
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+
+        - name: MSSQL_PID
+          value: "Developer"
+
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sqlserver-secret
+              key: SA_PASSWORD
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: sqlserver
+  namespace: cloudnativeecommerce
+
+spec:
+  selector:
+    app: sqlserver
+
+  ports:
+  - port: 1433
+    targetPort: 1433
+
+  type: ClusterIP

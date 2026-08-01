@@ -1,0 +1,52 @@
+grid
+bind 
+
+
+ctr_ProfileFieldGroup
+
+FieldID
+FieldName
+Section
+IsAlwaysRequired
+CanBeHidden
+DisplayOrder 
+
+
+dat_Profile_Configuration
+
+-----------------
+Logs
+Reply
+
+----
+
+
+test ddllanguage onadmin detail
+test delete image on admin userdetail
+
+test language at portal myaccoiunt
+---
+
+Layout
+Make address required with help message
+Script
+Multilingual
+
+------------
+
+
+DB Objects:
+
+ctr_ProfileFieldGroup
+
+dat_Profile_Configuration
+
+ProfileConfigurationType
+
+client_GetProfileConfigurationBySection
+
+client_SaveProfileConfiguration_Bulk
+
+client_ResetProfileConfigurationSection
+
+[client_GetProfileFieldRulesByZone]

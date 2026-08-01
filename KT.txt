@@ -1,0 +1,939 @@
+That's a good call. For a **quick recap**, 10–20 pages is much more practical. It should answer questions like:
+
+> "How did we wire IdentityService to SQL Server in Kubernetes again?"
+> "What was the order of creating resources?"
+> "Which port does RabbitMQ use?"
+> "Why do we need a Service if we already have a Pod?"
+
+Below is a condensed KT that reflects **exactly the architecture and implementation we've built together**.
+
+---
+
+# CloudNativeEcommerce – Quick KT (Project Recap)
+
+## 1. Project Overview
+
+CloudNativeEcommerce is a microservices-based application built using .NET 8 and deployed using Docker and Kubernetes.
+
+### Services
+
+* IdentityService (.NET + SQL Server + JWT)
+* ProductService (.NET + MongoDB)
+* OrderService (.NET + RabbitMQ Producer)
+* API Gateway (YARP Reverse Proxy)
+
+Infrastructure:
+
+* SQL Server
+* MongoDB
+* RabbitMQ
+* Seq (Logging)
+
+---
+
+# 2. High Level Architecture
+
+```
+                Client
+                   │
+                   ▼
+            API Gateway (YARP)
+                   │
+        ┌──────────┼──────────┐
+        │          │          │
+        ▼          ▼          ▼
+ Identity     Product      Order
+ Service      Service      Service
+     │            ▲            │
+     │            │            │
+ SQL Server   MongoDB     RabbitMQ
+                              │
+                              ▼
+                    Product Consumer
+                    Updates Inventory
+```
+
+---
+
+# 3. Technologies Used
+
+* ASP.NET Core Web API
+* .NET 8
+* Entity Framework Core
+* SQL Server
+* MongoDB
+* RabbitMQ
+* JWT Authentication
+* Docker
+* Docker Compose
+* Kubernetes
+* Serilog
+* Seq
+* xUnit
+
+---
+
+# 4. Development Flow
+
+Local Development
+
+```
+Visual Studio
+
+↓
+
+Docker Compose
+
+↓
+
+Containers
+
+↓
+
+API Testing (Postman)
+```
+
+Production Style
+
+```
+Source Code
+
+↓
+
+Docker Images
+
+↓
+
+Kubernetes Deployments
+
+↓
+
+Pods
+
+↓
+
+Services
+```
+
+---
+
+# 5. Docker Commands
+
+Start
+
+```
+docker compose up -d
+```
+
+Rebuild
+
+```
+docker compose up -d --build
+```
+
+Stop
+
+```
+docker compose down
+```
+
+Running Containers
+
+```
+docker ps
+```
+
+Container Logs
+
+```
+docker logs <container>
+```
+
+Shell
+
+```
+docker exec -it <container> sh
+```
+
+Images
+
+```
+docker images
+```
+
+---
+
+# 6. Infrastructure
+
+## SQL Server
+
+Server
+
+```
+localhost,1433
+```
+
+Login
+
+```
+sa
+YourStrong@Passw0rd
+```
+
+Database
+
+```
+IdentityDb
+```
+
+---
+
+## MongoDB
+
+Connection
+
+```
+mongodb://localhost:27017
+```
+
+Database
+
+```
+ProductDb
+```
+
+Collection
+
+```
+Products
+```
+
+---
+
+## RabbitMQ
+
+Management
+
+```
+http://localhost:15672
+```
+
+Login
+
+```
+guest
+guest
+```
+
+Queue
+
+```
+order-created
+```
+
+---
+
+## Seq
+
+```
+http://localhost:5341
+```
+
+Used for:
+
+* Structured Logs
+* Request Logs
+* Error Logs
+
+---
+
+# 7. Authentication
+
+JWT Config
+
+```
+Issuer
+Audience
+Key
+```
+
+Endpoints
+
+```
+POST /api/auth/register
+
+POST /api/auth/login
+
+GET /api/auth/secure
+```
+
+---
+
+# 8. Event Driven Flow
+
+```
+Order Created
+
+↓
+
+OrderService
+
+↓
+
+RabbitMQ Queue
+
+↓
+
+Product Consumer
+
+↓
+
+MongoDB Stock Update
+```
+
+Producer
+
+```
+BasicPublish()
+```
+
+Consumer
+
+```
+BasicConsume()
+```
+
+---
+
+# 9. Logging
+
+Used
+
+```
+Serilog
+```
+
+Sinks
+
+* Console
+* Seq
+
+Example
+
+```
+User registered
+
+User logged in
+
+Order created
+
+Stock updated
+```
+
+---
+
+# 10. Unit Testing
+
+Framework
+
+```
+xUnit
+```
+
+Tests Written
+
+IdentityService
+
+* Register
+* Duplicate Email
+* Login Success
+* Login Invalid Password
+
+Database
+
+```
+EF Core InMemory
+```
+
+---
+
+# 11. Kubernetes Architecture
+
+```
+Namespace
+
+↓
+
+Deployment
+
+↓
+
+ReplicaSet
+
+↓
+
+Pods
+
+↓
+
+Containers
+```
+
+Pods are temporary.
+
+Deployments manage Pods.
+
+---
+
+# 12. Kubernetes Resources
+
+## Namespace
+
+Purpose
+
+Logical isolation.
+
+Example
+
+```
+cloudnativeecommerce
+```
+
+---
+
+## Pod
+
+Runs the application container.
+
+Example
+
+```
+identityservice pod
+```
+
+Pods are disposable.
+
+---
+
+## Deployment
+
+Creates Pods.
+
+Maintains desired replicas.
+
+Handles updates.
+
+Example
+
+```
+IdentityService Deployment
+
+↓
+
+IdentityService Pod
+```
+
+---
+
+## Service
+
+Provides stable networking.
+
+Instead of connecting to
+
+```
+10.1.0.25
+```
+
+Services connect using
+
+```
+sqlserver
+
+mongodb
+
+rabbitmq
+
+identityservice
+```
+
+Pods may change.
+
+Service names never change.
+
+---
+
+## ClusterIP
+
+Internal communication only.
+
+Example
+
+```
+IdentityService
+
+↓
+
+sqlserver
+
+↓
+
+1433
+```
+
+Cannot be accessed directly from browser.
+
+---
+
+## NodePort
+
+Exposes service outside cluster.
+
+Example
+
+```
+localhost:30080
+```
+
+We mainly used
+
+```
+kubectl port-forward
+```
+
+during development.
+
+---
+
+## Ingress
+
+Single entry point into cluster.
+
+Example
+
+```
+Internet
+
+↓
+
+Ingress
+
+↓
+
+API Gateway
+```
+
+Later replaces NodePorts.
+
+---
+
+## ConfigMap
+
+Stores non-sensitive configuration.
+
+Examples
+
+```
+Issuer
+
+Audience
+
+Database Name
+
+RabbitMQ Host
+```
+
+Injected into container as environment variables.
+
+---
+
+## Secret
+
+Stores sensitive configuration.
+
+Examples
+
+```
+JWT Key
+
+SQL Password
+
+Connection String
+
+RabbitMQ Password
+```
+
+Never commit secrets to Git.
+
+---
+
+# 13. Resource Relationship
+
+```
+Ingress (later)
+
+↓
+
+Service
+
+↓
+
+Deployment
+
+↓
+
+Pods
+
+↓
+
+Container
+```
+
+Configuration
+
+```
+ConfigMap
+
+        \
+
+         → Deployment
+
+        /
+
+Secret
+```
+
+Deployment injects both into container.
+
+ASP.NET Core reads them through
+
+```
+builder.Configuration
+```
+
+---
+
+# 14. Port Relationship
+
+```
+Container
+
+↓
+
+containerPort
+
+↓
+
+Pod
+
+↓
+
+targetPort
+
+↓
+
+Service
+
+↓
+
+port
+```
+
+Outside access
+
+```
+NodePort
+
+or
+
+Port Forward
+```
+
+---
+
+# 15. Kubernetes Commands
+
+Namespace
+
+```
+kubectl get ns
+```
+
+Pods
+
+```
+kubectl get pods -n cloudnativeecommerce
+```
+
+Services
+
+```
+kubectl get svc -n cloudnativeecommerce
+```
+
+Deployments
+
+```
+kubectl get deployments -n cloudnativeecommerce
+```
+
+Logs
+
+```
+kubectl logs deployment/identityservice -n cloudnativeecommerce
+```
+
+Restart Deployment
+
+```
+kubectl rollout restart deployment/identityservice -n cloudnativeecommerce
+```
+
+Port Forward
+
+```
+kubectl port-forward svc/identityservice 5001:8080 -n cloudnativeecommerce
+```
+
+Apply YAML
+
+```
+kubectl apply -f k8s/<file>.yaml
+```
+
+Delete Resource
+
+```
+kubectl delete -f k8s/<file>.yaml
+```
+
+---
+
+# 16. Common Issues We Faced
+
+### SQL Login Failed
+
+Cause
+
+```
+Database didn't exist
+```
+
+Solution
+
+```
+Database.Migrate()
+
+Rebuild Docker Image
+
+Redeploy
+```
+
+---
+
+### Image Not Updating
+
+Cause
+
+```
+Old Docker image
+```
+
+Solution
+
+```
+docker build
+
+kubectl rollout restart
+```
+
+---
+
+### Connection Refused
+
+Cause
+
+```
+Port Forward stopped
+```
+
+Solution
+
+```
+kubectl port-forward
+```
+
+---
+
+### Kubernetes Couldn't Start
+
+Solution
+
+```
+Reset Kubernetes Cluster
+
+Enable Kubernetes again
+
+Verify:
+
+kubectl get nodes
+```
+
+---
+
+# 17. Current Progress
+
+Completed
+
+* Identity Service
+* Product Service
+* Order Service
+* API Gateway
+* JWT Authentication
+* SQL Server
+* MongoDB
+* RabbitMQ
+* Docker
+* Docker Compose
+* Serilog
+* Seq
+* Health Checks
+* Retry Policies
+* Unit Testing
+* Kubernetes Infrastructure
+* IdentityService on Kubernetes
+
+Remaining
+
+* ProductService Kubernetes
+* OrderService Kubernetes
+* API Gateway Kubernetes
+* Ingress
+* Horizontal Scaling
+* CI/CD
+* Azure Deployment
+
+This should stay under ~15 pages when exported and is designed as a **memory refresher**, not a full handbook. Once we complete the remaining Kubernetes work and Azure deployment, we can create a separate, more detailed handbook if you want.
+
+
+1. Changed C# code?
+→ Rebuild Docker image
+→ Restart deployment
+
+2. Changed ConfigMap?
+→ kubectl apply
+→ rollout restart deployment
+
+3. Changed Secret?
+→ kubectl apply
+→ rollout restart deployment
+
+4. Deployment still using old ConfigMap?
+→ Check envFrom
+
+5. Configuration null?
+→ kubectl exec -- printenv
+
+6. Service not reachable?
+→ kubectl get svc
+kubectl get endpoints
+
+7. Ingress issue?
+→ kubectl describe ingress
+kubectl logs ingress-nginx-controller
+
+8. Port 80 giving IIS?
+→ Stop IIS (iisreset /stop)
+
+9. Test Ingress without browser:
+→ curl -H "Host: cloudnative.local" http://localhost:8088/products/api/products
+
+Microsoft Windows [Version 10.0.26200.8875]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\System32>net stop W3SVC
+The World Wide Web Publishing Service service is stopping.
+The World Wide Web Publishing Service service was stopped successfully.
+
+
+C:\Windows\System32>net stop WAS
+The Windows Process Activation Service service is stopping.
+The Windows Process Activation Service service was stopped successfully.
+
+
+C:\Windows\System32>
+
+kubectl port-forward svc/seq 5341:80 -n cloudnativeecommerce
+
+docker build -t cloudnativeecommerce-orderservice:latest -f src/OrderService/Dockerfile .
+
+
+Because your existing KT already has sections **1–17**. I was suggesting adding a **new section** instead of renumbering everything.
+
+For your case, I'd **not** start at 18. I'd update the existing KT like this:
+
+* **Section 3 (Technologies Used)** → Add OpenTelemetry, Prometheus, Grafana.
+* **Section 6 (Infrastructure)** → Add Prometheus & Grafana.
+* **Section 15 (Kubernetes Commands)** → Add all your daily startup, build, rollout, and port-forward commands.
+* **Section 17 (Current Progress)** → Update to include Distributed Tracing, Metrics, Prometheus, Grafana.
+* Then add one final section:
+
+## 18. Daily Startup Checklist
+
+This way your KT remains clean and chronological instead of appending random sections.
+
+I think this is the best structure because after a week you'll naturally think:
+
+> "What do I start first?"
+
+and the last section answers exactly that.
+
+I'd also update the **Current Progress** section because it's now outdated. You've completed much more than it says.
+
+Instead of:
+
+```
+Completed
+
+• Identity Service
+• Product Service
+• Order Service
+...
+• IdentityService on Kubernetes
+```
+
+it should now be something like:
+
+```
+Completed
+
+✔ IdentityService
+✔ ProductService
+✔ OrderService
+✔ API Gateway (YARP)
+✔ SQL Server
+✔ MongoDB
+✔ RabbitMQ
+✔ Docker
+✔ Docker Compose
+✔ Kubernetes Deployments
+✔ ConfigMaps
+✔ Secrets
+✔ Ingress
+✔ Health Checks
+✔ Serilog
+✔ Seq
+✔ OpenTelemetry Tracing
+✔ Context Propagation (RabbitMQ)
+✔ Distributed Traces in Seq
+✔ OpenTelemetry Metrics
+✔ Prometheus
+✔ Grafana
+✔ Grafana Dashboard
+✔ PromQL Basics
+```
+
+So I wouldn't replace your KT—I would **merge all the new work into the relevant sections** and add one final "Daily Startup Checklist" section.
+
+That keeps it around **15–20 pages**, but it becomes a document you can genuinely pick up after a month and continue from exactly where you left off.
+

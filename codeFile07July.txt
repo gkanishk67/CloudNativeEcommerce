@@ -1,0 +1,805 @@
+<div id="tab-1" class="tab-pane fade active in">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>
+						<span>
+							<i class="fa fa-info-circle"></i>
+							<asp:Literal ID="litManage" runat="server" Text="Manage a person's contact and account information." />
+						</span>
+					</h4>
+				</div>
+			</div>
+			<%--===========================================================[End Header Row]================================================================--%>
+			<div class="row">
+				<div class="col-md-12">
+					<asp:Panel ID="pan" CssClass="divAlert" runat="server">
+						<div class="alert alert-success" runat="server" visible="false" id="divAlert">
+							<span class="icon-wrap-xs icon-circle alert-icon"><i class="fa fa-info fa-lg"></i></span><span runat="server" id="divMsg"></span>
+						</div>
+						<asp:Panel ID="panSummary" runat="server">
+							<asp:ValidationSummary ID="vSummary" EnableClientScript="true" ClientIDMode="Static" HeaderText="<strong><span data-field-id='50057'>Sorry, your submission could not be completed due to the following:</span></strong>" ValidationGroup="Member" runat="server" CssClass="alert alert-danger forecolor" />
+							<asp:RequiredFieldValidator ID="vPID" data-field-id="50058" ControlToValidate="txtPID" Display="None" ErrorMessage="PID is Required" ValidationGroup="Member" runat="server" />
+							<asp:CustomValidator ID="cvPID" data-field-id="50059" OnServerValidate="cvPID_ServerValidate" Enabled="false" ValidationGroup="Member" runat="server" Display="none" ErrorMessage="The PID you entered is already in use" />
+							<asp:CustomValidator ID="cvPIDLength" OnServerValidate="cvPIDLength_ServerValidate" Enabled="false" ValidationGroup="Member" runat="server" Display="none" />
+
+							<!-- Name & Contact -->
+							<asp:ValidationSummary ID="vSummaryCustomFields" HeaderText="<strong><span data-field-id='50061'>Sorry, your submission could not be completed due to the following:</span></strong>" ValidationGroup="CustomFields" runat="server" CssClass="alert alert-danger forecolor" />
+							<asp:RequiredFieldValidator ID="vPrefix" data-field-id="87883" ControlToValidate="txtPrefix" Display="none" ErrorMessage="Prefix is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vFirstName" data-field-id="50062" ControlToValidate="txtFirstName" Display="None" ErrorMessage="First Name is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vMIRequired" data-field-id="87893" ControlToValidate="txtMI" Display="None" ErrorMessage="Middle Name is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vlastname" data-field-id="50063" ControlToValidate="txtLastName" Display="None" ErrorMessage="Last Name is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vSuffix" data-field-id="87884" ControlToValidate="txtSuffix" Display="none" ErrorMessage="Suffix is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vMaidenName" data-field-id="87885" ControlToValidate="txtMaidenName" Display="none" ErrorMessage="Maiden Name is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vPreferredName" data-field-id="87886" ControlToValidate="txtNicknames" Display="none" ErrorMessage="Preferred Name is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vDOB" data-field-id="40685" ControlToValidate="rdpDateofBirth" Display="None" ErrorMessage="Date of Birth is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vGender" data-field-id="40684" ControlToValidate="ddlGender" Display="none" ErrorMessage="Gender is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vEthnicity" data-field-id="88073" ControlToValidate="ddlEthnicity" Display="none" ErrorMessage="Ethnicity is required" ValidationGroup="Member" runat="server" Enabled="false" />
+
+							<!-- Email -->
+							<asp:RequiredFieldValidator ID="vEmail" data-field-id="50064" ControlToValidate="txtEmail" Display="None" ErrorMessage="Email is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="rvSecondaryEmail" data-field-id="88058" ControlToValidate="txtSecondaryEmail" Display="None" ErrorMessage="Secondary Email is Required" ValidationGroup="Member" runat="server" />
+							<asp:CustomValidator ID="cEmailExist" data-field-id="50065" ControlToValidate="" OnServerValidate="cuEmail_ServerValidate" Display="None" ErrorMessage="The email you entered is already in use" ValidationGroup="Member" runat="server" />
+							<asp:RegularExpressionValidator ID="vEmail1" data-field-id="50066" runat="server" ControlToValidate="txtEmail" ErrorMessage="Email is Invalid" Display="None" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" ValidationGroup="Member" />
+							<asp:CustomValidator ID="cSecondaryEmail" data-field-id="50067" ControlToValidate="" OnServerValidate="cuSecondaryEmail_ServerValidate" Display="None" ErrorMessage="Primary and Secondary email cannot be same" ValidationGroup="Member" runat="server" />
+							<asp:RegularExpressionValidator ID="vSecondaryEmail" data-field-id="50068" runat="server" ControlToValidate="txtSecondaryEmail" ErrorMessage="Secondary Email is Invalid" Display="None" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" ValidationGroup="Member" />
+
+							<!-- Website -->
+							<asp:RequiredFieldValidator ID="vWebsiteRequired" data-field-id="87888" ControlToValidate="txtWeb" Display="None" ErrorMessage="Website is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RegularExpressionValidator ID="vWebsite" data-field-id="50069" ControlToValidate="txtWeb" Display="None" ErrorMessage="The website you entered was an invalid format. The format requires http:// or https:// to begin the url." ValidationExpression="(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?" ValidationGroup="Member" runat="server" />
+
+							<!-- Security Questions -->
+							<asp:RequiredFieldValidator ID="vSecurityQuestion1" data-field-id="50070" Enabled="false" ControlToValidate="ddlSecurityQuestion1" Display="None" ErrorMessage="Security Question 1 is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vAnswer1" data-field-id="50071" Enabled="false" ControlToValidate="txtAnswer1" Display="None" ErrorMessage="Answer 1 is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vSecurityQuestion2" data-field-id="50072" Enabled="false" ControlToValidate="ddlSecurityQuestion2" Display="None" ErrorMessage="Security Question 2 is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vAnswer2" data-field-id="50073" Enabled="false" ControlToValidate="txtAnswer2" Display="None" ErrorMessage="Answer 2 is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vSecurityQuestion3" data-field-id="50074" Enabled="false" ControlToValidate="ddlSecurityQuestion3" Display="None" ErrorMessage="Security Question 3 is Required" ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vAnswer3" data-field-id="50075" Enabled="false" ControlToValidate="txtAnswer3" Display="None" ErrorMessage="Answer 3 is Required" ValidationGroup="Member" runat="server" />
+
+							<!-- Mailing Address -->
+							<asp:RequiredFieldValidator ID="vMailCountry" data-field-id="50076" ControlToValidate="ddlMailCountry" Display="None" ErrorMessage="Primary Mailing Country is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+							<asp:RequiredFieldValidator ID="vMailAdd1" data-field-id="50077" ControlToValidate="txtMailAddress1" Display="None" ErrorMessage="Primary Mailing Address Line 1 is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+							<asp:RequiredFieldValidator ID="vMailAdd2" data-field-id="88064" ControlToValidate="txtMailAddress2" Display="None" ErrorMessage="Primary Mailing Address Line 2 is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+							<asp:RequiredFieldValidator ID="vMailAdd3" data-field-id="88065" ControlToValidate="txtMailAddress3" Display="None" ErrorMessage="Primary Mailing Address Line 3 is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+							<asp:RequiredFieldValidator ID="vMailCity" data-field-id="50078" ControlToValidate="txtMailCity" Display="None" ErrorMessage="Primary Mailing City is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+							<asp:RequiredFieldValidator ID="vMailState" data-field-id="50079" ControlToValidate="ddlMailState" Display="None" ErrorMessage="Primary Mailing State/Province is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+							<asp:RequiredFieldValidator ID="vMailZip" data-field-id="50080" ControlToValidate="txtMailZip" Display="None" ErrorMessage="Primary Mailing Zipcode is Required" ValidationGroup="Member" runat="server" Enabled="False" />
+
+							<!-- Company Address -->
+							<asp:RequiredFieldValidator ID="vCompanyCountry" data-field-id="50081" ControlToValidate="ddlCompanyCountry" Display="None" ErrorMessage="Primary Office Country is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyAddress1" data-field-id="50082" ControlToValidate="txtCompanyAddress1" Display="None" ErrorMessage="Primary Office Address Line 1 is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyAddress2" data-field-id="88066" ControlToValidate="txtCompanyAddress2" Display="None" ErrorMessage="Primary Office Address Line 2 is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyAddress3" data-field-id="88067" ControlToValidate="txtCompanyAddress3" Display="None" ErrorMessage="Primary Office Address Line 3 is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyCity" data-field-id="50083" ControlToValidate="txtCompanyCity" Display="None" ErrorMessage="Primary Office City is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyState" data-field-id="50084" ControlToValidate="ddlCompanyState" Display="None" ErrorMessage="Primary Office State/Province is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyZip" data-field-id="50085" ControlToValidate="txtCompanyZip" Display="None" ErrorMessage="Primary Office Zipcode is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCompanyName" data-field-id="87887" ControlToValidate="txtCompanyName" Display="None" ErrorMessage="Company Name is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCredentials" data-field-id="88072" ControlToValidate="txtCredentials" Display="None" ErrorMessage="Credential is required" ValidationGroup="Member" runat="server" Enabled="false" />
+
+							<!-- Phones -->
+							<asp:RequiredFieldValidator ID="vOffice" data-field-id="50086" ControlToValidate="txtOfficePhone" Display="None" ErrorMessage="Office Phone is Required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vHomePhone" data-field-id="87890" ControlToValidate="txtHomePhone" Display="None" ErrorMessage="Home Phone is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vCellPhone" data-field-id="87891" ControlToValidate="txtCellPhone" Display="None" ErrorMessage="Cell Phone is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vFax" data-field-id="87892" ControlToValidate="txtFax" Display="None" ErrorMessage="Fax is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vRecieveText" data-field-id="88075" ControlToValidate="ddlReceiveTexts" Display="None" ErrorMessage="Receive SMS Text Messages is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:CustomValidator ID="vCellNumber" data-field-id="50094" Display="None" OnServerValidate="vCellNumber_ServerValidate" ErrorMessage="Cell Phone number must be at least 10 digits" runat="server" ValidationGroup="Member" />
+
+							<!-- Profile Info -->
+							<asp:RequiredFieldValidator ID="vPracticeType" data-field-id="40686" ControlToValidate="ddlPracticeType" Display="None" ErrorMessage="Practice Type is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vTimeZone" data-field-id="88074" ControlToValidate="rcbTimeZone" Display="None" ErrorMessage="Time Zone is required" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:RequiredFieldValidator ID="vActiveLevel" data-field-id="50087" ControlToValidate="ddlCategorization" Display="None" ErrorMessage="Profile Category is Required" ValidationGroup="Member" runat="server" />
+
+							<!-- Password -->
+							<asp:RequiredFieldValidator ID="vPassword" data-field-id="50088" ControlToValidate="txtNewPassword" Display="None" ErrorMessage="Password is Required" ValidationGroup="Member" runat="server" />
+							<asp:CompareValidator ID="vPasswordCompare" data-field-id="50089" ControlToValidate="txtNewPassword" ControlToCompare="txtPasswordConfirm" Display="none" ErrorMessage="Password fields must match." ValidationGroup="Member" runat="server" />
+							<asp:RequiredFieldValidator ID="vPassword1ConfirmPassword" data-field-id="50090" ControlToValidate="txtPasswordConfirm" Display="none" ErrorMessage="Please retype password." ValidationGroup="Member" runat="server" />
+							<asp:RegularExpressionValidator ID="vrePassword" runat="server" data-field-id="50091" EnableClientScript="true" ErrorMessage="Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one number." ControlToValidate="txtNewPassword" Display="None" ValidationExpression="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" ValidationGroup="Member" />
+							<asp:RegularExpressionValidator ID="vPasswordSpecialCharacters" runat="server" data-field-id="88530" EnableClientScript="true" ErrorMessage="Password must contain at least one of the following special characters: ! ? . @ # $ % ^ & + =" ControlToValidate="txtNewPassword" Display="None" ValidationExpression="^.*[!?.@#$%^&+=].*$" ValidationGroup="Member" />
+							<asp:RequiredFieldValidator ID="vCEProviderStatus" ValidationGroup="Member" ControlToValidate="ddlProviderStatus" Display="none" ErrorMessage="CE Provider Status is required" runat="server" Enabled="false" />
+
+							<!-- Files -->
+							<asp:CustomValidator ID="vImageBlob" data-field-id="50092" Display="None" OnServerValidate="vImageBlob_ServerValidate" ErrorMessage="Photo Upload should be less than 80 KB. Only .jpg, .gif, .jpeg, .png files are allowed with maximum dimensions 1000x750 pixels" ValidationGroup="Member" runat="server" />
+							<asp:CustomValidator ID="vFiles" Display="None" OnServerValidate="vFiles_ServerValidate" ErrorMessage="File Upload should be less than 20 MB. Only doc, docx, ppt, xls, pdf, zip, pptx, xlsx files are allowed" ValidationGroup="Member" runat="server" Enabled="false" />
+							<asp:CustomValidator ID="vImage" data-field-id="87889" Display="None" OnServerValidate="valImage_ServerValidate" ErrorMessage="Image is required" ValidationGroup="Member" runat="server" Enabled="false" />
+						</asp:Panel>
+					</asp:Panel>
+				</div>
+			</div>
+			<%--===========================================================[End Validation Row]================================================================--%>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><span data-field-id="50096">Personal Information</span></h3>
+						</div>
+						<div class="panel-body text-dark container-fluid">
+							<div class="row">
+								<asp:Panel runat="server" ID="panPID" Visible="false">
+									<div class="col-md-2">
+										<div class="form-control">
+											<asp:Literal ID="litPid1" runat="server" />
+										</div>
+										<label class="small control-label text-dark"><span data-field-id="50097">PID</span></label>
+									</div>
+								</asp:Panel>
+							</div>
+							<div class="row">
+								<asp:Panel CssClass="col-md-3" Visible="false" ID="panPIDGenerate" runat="server">
+									<asp:TextBox ID="txtPID" data-field-id="50098" Placeholder="PID" CssClass="form-control" ClientIDMode="Static" MaxLength="6" TextMode="SingleLine" runat="server" />
+									<div class="form-control" visible="false" runat="server" id="divPID">
+										<asp:Label Text="" ID="litUserPID" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50099">PID</span><span class="req">*</span>
+										<asp:LinkButton OnClick="btnHelpPID_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpPID" /></label>
+								</asp:Panel>
+								<asp:Panel runat="server" ID="panPrefix" class="col-md-1">
+									<asp:TextBox ID="txtPrefix" data-field-id="50100" Placeholder="Prefix" CssClass="form-control" MaxLength="200" TextMode="SingleLine" runat="server" />
+									<div class="form-control" visible="false" runat="server" id="divPrefix">
+										<asp:Label Text="" ID="litPrefix" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark"><span data-field-id="50101">Prefix</span><asp:Literal ID="litPrefixReq" runat="server" /><asp:LinkButton OnClick="btnHelpPrefix_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpPrefix" /></label>
+								</asp:Panel>
+								<asp:Panel ID="panFName" runat="server" CssClass="col-md-3">
+									<asp:TextBox ID="txtFirstName" data-field-id="50102" Placeholder="First" CssClass="form-control" MaxLength="200" TextMode="SingleLine" runat="server" />
+									<div class="form-control" visible="false" runat="server" id="divFirstName">
+										<asp:Label Text="" ID="litFirstName" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50103">First Name</span><span class="req">*</span>
+										<asp:LinkButton OnClick="btnHelpFirst_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpFirst" />
+									</label>
+								</asp:Panel>
+								<div runat="server" id="panMI" class="col-md-2">
+									<asp:TextBox ID="txtMI" data-field-id="50104" Placeholder="Middle" CssClass="form-control" MaxLength="200" TextMode="SingleLine" runat="server" />
+									<div visible="false" class="form-control" runat="server" id="divMiddleName">
+										<asp:Label Text="" ID="litMiddleName" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50105">MI</span><asp:Literal ID="litMIReq" runat="server" /><asp:LinkButton OnClick="btnHelpMiddle_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpMiddle" />
+									</label>
+								</div>
+								<asp:Panel ID="panLName" runat="server" CssClass="col-md-2">
+									<asp:TextBox ID="txtLastName" data-field-id="50106" Placeholder="Last" CssClass="form-control" MaxLength="200" TextMode="SingleLine" runat="server" />
+									<div class="form-control" runat="server" visible="false" id="divLastName">
+										<asp:Label Text="" ID="litLastName" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50107">Last Name</span><span class="req">*</span>
+										<asp:LinkButton OnClick="btnHelpLast_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpLast" />
+									</label>
+								</asp:Panel>
+								<div runat="server" id="panSuffix" class="col-md-1">
+									<asp:TextBox ID="txtSuffix" data-field-id="50108" Placeholder="Suffix" CssClass="form-control" MaxLength="200" TextMode="SingleLine" runat="server" />
+									<div class="form-control" runat="server" visible="false" id="divSuffix">
+										<asp:Label Text="" ID="litSuffix" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50109">Suffix</span><asp:Literal ID="litSuffixReq" runat="server" />
+										<asp:LinkButton OnClick="btnHelpSuffix_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpSuffix" />
+									</label>
+								</div>
+							</div>
+							<div class="row">
+								<div runat="server" id="panMaiden" class="col-md-3">
+									<asp:TextBox ID="txtMaidenName" data-field-id="50110" Placeholder="Maiden Name" CssClass="form-control" MaxLength="50" TextMode="SingleLine" runat="server" />
+									<div class="form-control" runat="server" visible="false" id="divMaiden">
+										<asp:Label Text="" ID="litMaiden" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50111">Maiden Name</span><asp:Literal ID="litMaidenNameReq" runat="server" />
+										<asp:LinkButton OnClick="btnHelpMaiden_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpMaiden" />
+									</label>
+								</div>
+								<div runat="server" id="panNickname" class="col-md-3">
+									<asp:TextBox ID="txtNicknames" data-field-id="50112" Placeholder="Preferred Name" CssClass="form-control" MaxLength="50" TextMode="SingleLine" runat="server" />
+									<div class="form-control" runat="server" visible="false" id="divNickname">
+										<asp:Label Text="" ID="litNickname" runat="server" CssClass="control-label text-dark" />
+									</div>
+									<label class="control-label small text-dark">
+										<span data-field-id="50113">Preferred Name</span><asp:Literal ID="litPreferredNameReq" runat="server" />
+										<asp:LinkButton OnClick="btnHelpNickname_Click" Visible="false" CssClass="glyphicon glyphicon-question-sign" runat="server" ID="btnHelpNickname" />
+									</label>
+								</div>
+								<div runat="server" id="panDOB" class="col-md-2">
+									<telerik:RadDatePicker ID="rdpDateofBirth" CssClass="filter-date" Width="100%" Skin="Bootstrap" runat="server">
+										<Calendar runat="server" ShowRowHeaders="false">
+											<SpecialDays>
+												<telerik:RadCalendarDay Repeatable="Today" ItemStyle-BackColor="LightGray" />
+											</SpecialDays>
+										</Calendar>
+									</telerik:RadDatePicker>
+									<label class="control-label small text-dark"><span data-field-id="50115">Birthdate</span><asp:Literal ID="litDOBReq" runat="server" /></label>
+								</div>
+								<div runat="server" id="panGender" class="col-md-2">
+									<asp:DropDownList ID="ddlGender" data-field-id="30007-{0}-Gender" runat="Server" CssClass="form-control" />
+									<label class="control-label small text-dark"><span data-field-id="50116">Gender</span><asp:Literal ID="litGenderReq" runat="server" /></label>
+								</div>
+								<asp:Panel CssClass="form-group" ID="panEthnicity" Visible="false" runat="server">
+									<div class="col-sm-2">
+										<asp:DropDownList ID="ddlEthnicity" data-field-id="30008-{0}-Ethnicity" runat="server" CssClass="form-control" />
+										<label class="control-label small text-dark"><span data-field-id="50117">Ethnicity</span><asp:Literal ID="litEthinicityReq" runat="server" /></label>
+									</div>
+								</asp:Panel>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<asp:TextBox data-field-id="50118" Placeholder="Email" ID="txtEmail" ClientIDMode="Static" MaxLength="100" CssClass="form-control" TextMode="SingleLine" runat="server" />
+									<label class="control-label small text-dark"><span data-field-id="50119">Email</span><span class="req">*</span></label>
+									<asp:Literal ID="litEmail" runat="server" Visible="false" />
+								</div>
+								<asp:panel runat="server" ID="panSecondaryEmail" CssClass="col-md-6">
+									<asp:TextBox data-field-id="50120" Placeholder="Secondary Email" ID="txtSecondaryEmail" ClientIDMode="Static" MaxLength="100" CssClass="form-control" TextMode="SingleLine" runat="server" />
+									<label class="control-label small text-dark"><span data-field-id="50121">Secondary Email</span><asp:Literal ID="litSecondaryEmailReq" runat="server" /></label>
+									<asp:Literal ID="litSecondaryEmail" runat="server" Visible="false" />
+								</asp:panel>
+							</div>
+							<div class="row">
+								<asp:Panel runat="server" ID="panWebsite" class="col-md-3">
+									<asp:TextBox ID="txtWeb" data-field-id="50122" Placeholder="Website" CssClass="form-control" MaxLength="150" TextMode="SingleLine" runat="server" />
+									<label class="control-label small text-dark"><span data-field-id="50123">Website</span><asp:Literal ID="litWebsiteReq" runat="server" /></label>
+
+								</asp:Panel>
+								<asp:Panel runat="server" ID="panPracticeType" class="col-md-3">
+									<asp:DropDownList ID="ddlPracticeType" data-field-id="30009-{0}-PracticeType" runat="server" CssClass="form-control" />
+									<label class="control-label small text-dark"><span data-field-id="50124">Practice Type</span><asp:Literal ID="litPracticeReq" runat="server" /></label>
+
+								</asp:Panel>
+								<asp:panel runat="server" ID="panTimeZone" class="col-md-3">
+									<telerik:RadComboBox
+										runat="server"
+										ID="rcbTimeZone"
+										EmptyMessage="-- Test Select Time Zone --"
+										RenderMode="Lightweight"
+										Filter="Contains"
+										Skin="Bootstrap"
+										Width="100%"
+										CssClass="form-control-combobox"
+										EnableLoadOnDemand="True">
+									</telerik:RadComboBox>
+									<label class="control-label small text-dark"><span data-field-id="50836">Time Zone</span><asp:Literal ID="litTimeZoneReq" runat="server" /></label>
+								</asp:panel>
+								<asp:panel runat="server" ID="panCompanyName" class="col-md-3">
+									<asp:TextBox ID="txtCompanyName" data-field-id="50126" runat="server" CssClass="form-control" TextMode="SingleLine" placeholder="Company Name" />
+									<label class="control-label small text-dark"><span data-field-id="50127">Company Name</span><asp:Literal ID="litCompanyNameReq" runat="server" /></label>
+								</asp:panel>
+							</div>
+							<div class="row">
+								<asp:panel runat="server" ID="panCredentials" class="col-md-3">
+									<asp:TextBox ID="txtCredentials" runat="server" CssClass="form-control" />
+									<asp:Literal ID="litCredentials" runat="server" Visible="false" />
+									<label class="control-label small text-dark">
+										<span data-field-id="50128">Credentials</span><asp:Literal ID="litCredReq" runat="server" />
+										<asp:LinkButton
+											OnClick="btnHelpCredentials_Click"
+											Visible="false"
+											CssClass="glyphicon glyphicon-question-sign custom_glyphicon"
+											runat="server"
+											ID="btnHelpCredentials" />
+									</label>
+								</asp:panel>
+								<asp:Panel CssClass="col-md-3" ID="panLanguage" Visible="false" runat="server">
+									<asp:DropDownList ID="ddlLanguage" runat="server" CssClass="form-control" />
+									<label class="control-label small text-dark"><span data-field-id="1514">Language</span><asp:Literal ID="litLanguageReq" runat="server" /></label>
+								</asp:Panel>
+								<div class="col-md-3"></div>
+							</div>
+						</div>
+
+						<%--===========================================================[End Personal Info Row]================================================================--%>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-borderless">
+									<div class="row">
+										<div class="col-lg-6" style="border-right: solid 1px #E3E7EC">
+											<asp:Panel runat="server" ID="panMailingAddress" CssClass="panel panel-borderless">
+												<div class="panel-heading">
+													<h4 class="panel-title"><span data-field-id="50129">Primary Mailing Address</span></h4>
+												</div>
+												<div class="panel-body">
+													<div runat="server" id="panMailCountry" class="col-md-6">
+														<asp:DropDownList ID="ddlMailCountry" data-field-id="30010-{0}-Country" CssClass="form-control" AutoPostBack="true" runat="server" ValidationGroup="Member" />
+														<label class="control-label small text-dark"><span data-field-id="50130">Country</span><asp:Literal ID="litPrimaryCountryReq" runat="server" /></label>
+
+													</div>
+													<div runat="server" id="panMailAddress1" class="col-md-12">
+														<asp:TextBox ID="txtMailAddress1" data-field-id="50131" CssClass="form-control" MaxLength="50" runat="server" ValidationGroup="Member" />
+														<label class="control-label small text-dark"><span data-field-id="50132">Address Line 1</span><asp:Literal ID="litPrimaryAddress1Req" runat="server" /></label>
+
+													</div>
+													<div runat="server" id="panMailAddress2" class="col-md-12">
+														<asp:TextBox ID="txtMailAddress2" data-field-id="50133" CssClass="form-control" MaxLength="50" runat="server" ValidationGroup="Member"/>
+														<label class="control-label small text-dark"><span data-field-id="50134">Address Line 2</span><asp:Literal ID="litPrimaryAddress2Req" runat="server" /></label>
+													</div>
+													<div runat="server" id="panMailAddress3" class="col-md-12">
+														<asp:TextBox ID="txtMailAddress3" data-field-id="50135" CssClass="form-control" MaxLength="50" runat="server" ValidationGroup="Member"/>
+														<label class="control-label small text-dark"><span data-field-id="50136">Address Line 3</span><asp:Literal ID="litPrimaryAddress3Req" runat="server" /></label>
+													</div>
+													<div runat="server" id="panMailCity" class="col-md-4">
+														<asp:TextBox ID="txtMailCity" data-field-id="50137" CssClass="form-control" MaxLength="50" runat="server" ValidationGroup="Member" />
+														<label class="control-label small text-dark"><span data-field-id="50138">City</span><asp:Literal ID="litPrimaryCity1Req" runat="server" /></label>
+
+													</div>
+													<div runat="server" id="panMailState" class="col-md-4">
+														<asp:TextBox ID="txtMailProvince" MaxLength="50" CssClass="form-control" TextMode="SingleLine" runat="server" Visible="false" />
+														<asp:DropDownList ID="ddlMailState" data-field-id="30011-{0}-State" CssClass="form-control" runat="server" ValidationGroup="Member" />
+														<asp:Literal ID="litMailState" runat="server" Visible="false" />
+														<label class="control-label small text-dark"><span data-field-id="50139">State/Province</span><asp:Literal ID="litReq" runat="server" /></label>
+													</div>
+													<div runat="server" id="panMailZip" class="col-md-4">
+														<asp:TextBox ID="txtMailZip" data-field-id="50140" CssClass="form-control" MaxLength="15" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50141">Zip/Postal Code</span><asp:Literal ID="litZipRequired" runat="server" /></label>
+													</div>
+												</div>
+											</asp:Panel>
+										</div>
+										<div class="col-lg-6">
+											<asp:Panel ID="panOfficeAddress" runat="server" CssClass="panel panel-borderless">
+												<div class="panel-heading">
+													<h4 class="panel-title"><span data-field-id="50142">Primary Office Address</span></h4>
+												</div>
+												<div class="pad-5">
+													<small class="text-dark">
+														<asp:CheckBox ID="chkSameAsMailingDiplomate" runat="Server" AutoPostBack="true" Text="Same as primary mailing address" />
+													</small>
+													<hr class="mar-no pad-no" />
+												</div>
+												<div class="panel-body">
+													<div runat="server" id="panCompanyCountry" class="col-md-6">
+														<asp:DropDownList ID="ddlCompanyCountry" data-field-id="30010-{0}-Country" CssClass="form-control" AutoPostBack="true" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50144">Country</span><asp:literal runat="server" id="reqCountry"/></label>
+
+													</div>
+													<div runat="server" id="panCompanyAddress1" class="col-md-12">
+														<asp:TextBox ID="txtCompanyAddress1" MaxLength="50" CssClass="form-control" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50145">Address Line 1</span><asp:literal runat="server" id="reqAddress" /></label>
+													</div>
+													<div runat="server" id="panCompanyAddress2" class="col-md-12">
+														<asp:TextBox ID="txtCompanyAddress2" MaxLength="50" CssClass="form-control" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50146">Address Line 2</span><asp:Literal ID="litCompanyAddress2Required" runat="server" /></label>
+													</div>
+													<div runat="server" id="panCompanyAddress3" class="col-md-12">
+														<asp:TextBox ID="txtCompanyAddress3" MaxLength="50" CssClass="form-control" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50147">Address Line 3</span><asp:Literal ID="litCompanyAddress3Required" runat="server" /></label>
+													</div>
+													<div runat="server" id="panCompanyCity" class="col-md-4">
+														<asp:TextBox ID="txtCompanyCity" MaxLength="50" CssClass="form-control" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50148">City</span><asp:literal runat="server" id="reqCity" /></label>
+													</div>
+													<div runat="server" id="panCompanySate" class="col-md-4">
+														<asp:TextBox ID="txtCompanyProvince" MaxLength="50" CssClass="form-control" TextMode="SingleLine" runat="server" Visible="false" />
+														<asp:DropDownList ID="ddlCompanyState" data-field-id="30011-{0}-State" runat="server" CssClass="form-control" />
+														<asp:Literal ID="litCompanyState" runat="server" Visible="false" />
+														<label class="control-label small text-dark"><span data-field-id="50149">State/Province</span><asp:Literal ID="litStateProvinceReq" runat="server" /></label>
+													</div>
+													<div runat="server" id="panCompanyZip" class="col-md-4">
+														<asp:TextBox ID="txtCompanyZip" CssClass="form-control" MaxLength="15" runat="server" />
+														<label class="control-label small text-dark"><span data-field-id="50150">Zip/Postal Code</span><asp:Literal ID="litCZipRequired" runat="server" /></label>
+													</div>
+												</div>
+											</asp:Panel>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<%--===========================================================[End Mailing Addresses Row]================================================================--%>
+						<div class="row">
+							<div class="col-md-12">
+								<asp:Panel runat="server" ID="panAdditionalAddress" Visible="false" CssClass="panel panel-borderless">
+									<div class="panel-heading">
+										<h4 class="panel-title">Additional Addresses</h4>
+									</div>
+									<div class="panel-body">
+										<UC:address runat="server" ID="ucAddress" />
+									</div>
+								</asp:Panel>
+							</div>
+						</div>
+						<%--===========================================================[End Additional Addresses Row]================================================================--%>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-borderless">
+									<div class="panel-heading">
+										<h4 class="panel-title"><span data-field-id="50151">Phones</span></h4>
+									</div>
+									<div class="panel-body">
+										<asp:panel runat="server" ID="panOfficePhone" class="col-md-3">
+											<asp:TextBox ID="txtOfficePhone" CssClass="form-control" TextMode="SingleLine" MaxLength="12" runat="server" />
+											<label class="control-label small text-dark"><span data-field-id="50152">Office Phone</span><asp:Literal ID="litOfficePhoneReq" runat="server" /></label>
+										</asp:panel>
+										<asp:panel runat="server" ID="panHomePhone" class="col-md-3">
+											<asp:TextBox ID="txtHomePhone" CssClass="form-control" TextMode="SingleLine" MaxLength="12" runat="server" />
+											<label class="control-label small text-dark"><span data-field-id="50153">Home Phone</span><asp:Literal ID="litHomePhoneReq" runat="server" /></label>
+										</asp:panel>
+										<asp:panel runat="server" ID="panCell" class="col-md-3">
+											<asp:TextBox ID="txtCellPhone" CssClass="form-control" TextMode="SingleLine" MaxLength="12" runat="server" />
+											<label class="control-label small text-dark"><span data-field-id="50154">Cell Phone</span><asp:Literal ID="litCellPhoneReq" runat="server" /></label>
+										</asp:panel>
+										<div runat="server" id="panFax" class="col-md-3">
+											<asp:TextBox ID="txtFax" CssClass="form-control" TextMode="SingleLine" MaxLength="15" runat="server" />
+											<label class="control-label small text-dark"><span data-field-id="50155">Fax</span><asp:Literal ID="litFaxReq" runat="server" /></label>
+										</div>
+										<div runat="server" id="panText" class="col-md-3">
+											<asp:DropDownList ID="ddlReceiveTexts" runat="server" CssClass="form-control" AutoPostBack="true">
+												<asp:ListItem Text="Yes" data-field-id="50202-1" Value="1" />
+												<asp:ListItem Text="No" data-field-id="50202-2" Value="0" />
+											</asp:DropDownList>
+											<label class="control-label small text-dark"><span data-field-id="50156">Receive SMS Text Messages?</span><asp:Literal ID="litRecieveMsg" runat="server" /></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<%--===========================================================[End Phones Row]================================================================--%>
+						<div class="row">
+							<div class="col-md-12">
+								<asp:Panel ID="panAccountInformation" runat="server" CssClass="panel panel-borderless">
+									<div class="panel-heading">
+										<h4 class="panel-title"><span data-field-id="50157">Account Information</span></h4>
+									</div>
+									<div class="panel-body">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<asp:Panel runat="server" ID="panRole" class="col-md-3">
+														<div class="form-control">
+															<asp:Literal ID="litStatus" runat="server" />
+														</div>
+														<label class="control-label small text-dark"><span data-field-id="50158">Role</span><span class="req">*</span></label>
+													</asp:Panel>
+													<asp:Panel runat="server" ID="panUserStatus" class="col-md-3">
+														<asp:Literal ID="litCategorization" runat="server" Visible="false" />
+														<asp:DropDownList ID="ddlCategorization" data-field-id="30012-{0}-Status" runat="server" CssClass="form-control" />
+														<label class="control-label small text-dark"><span data-field-id="50159">Profile Category</span><span class="req">*</span></label>
+													</asp:Panel>
+													<asp:Panel runat="server" ID="panRetired" class="col-md-3">
+														<telerik:RadDatePicker ID="rdpRetiredDate" CssClass="filter-date" Width="100%" Skin="Bootstrap" runat="server">
+															<Calendar runat="server" ShowRowHeaders="false">
+																<SpecialDays>
+																	<telerik:RadCalendarDay Repeatable="Today" ItemStyle-BackColor="LightGray" />
+																</SpecialDays>
+															</Calendar>
+														</telerik:RadDatePicker>
+														<label class="control-label small text-dark"><span data-field-id="50161">Retired Date</span></label>
+													</asp:Panel>
+													<asp:Panel runat="server" ID="panDeceased" class="col-md-3">
+														<telerik:RadDatePicker ID="rdpDeceasedDate" CssClass="filter-date" Width="100%" Skin="Bootstrap" runat="server">
+															<Calendar runat="server" ShowRowHeaders="false">
+																<SpecialDays>
+																	<telerik:RadCalendarDay Repeatable="Today" ItemStyle-BackColor="LightGray" />
+																</SpecialDays>
+															</Calendar>
+														</telerik:RadDatePicker>
+														<label class="control-label small text-dark"><span data-field-id="50163">Deceased Date</span></label>
+													</asp:Panel>
+												</div>
+												<div class="row">
+													<asp:Panel runat="server" ID="panPaidThrough" Visible="false" class="col-md-3">
+														<asp:DropDownList ID="ddlYear" runat="Server" CssClass="form-control" />
+														<asp:Literal ID="litYear" runat="server" Visible="false" />
+														<label class="control-label small text-dark"><span data-field-id="50164">Paid Through</span></label>
+													</asp:Panel>
+
+													<asp:Panel runat="server" ID="panFeatured" class="col-md-3">
+														<asp:DropDownList ID="ddlFeatured" runat="Server" CssClass="form-control">
+															<asp:ListItem data-field-id="50203-1" Text="-- Select --" Value="" />
+															<asp:ListItem data-field-id="50203-2" Text="Yes" Value="1" />
+															<asp:ListItem data-field-id="50203-3" Text="No" Value="0" />
+														</asp:DropDownList>
+														<label class="control-label small text-dark"><span data-field-id="50165">Featured Certified?</span></label>
+													</asp:Panel>
+
+													<asp:Panel runat="server" ID="panMraid" class="col-md-3">
+														<asp:Literal ID="litMRAID" runat="server" Visible="false" />
+														<asp:TextBox ID="txtMRAID" runat="server" CssClass="form-control" MaxLength="50" />
+														<label class="control-label small text-dark">
+															<span data-field-id="50166">MRA ID#<asp:LinkButton ID="btnGenerate" data-field-id="50205" runat="server" Text="Generate MRAID" CssClass="btn-link pad-lft" /></span>
+														</label>
+													</asp:Panel>
+
+													<asp:Panel runat="server" ID="panMemberNumber" class="col-md-3" Visible="false">
+														<asp:TextBox ID="txtMemberNumber" runat="server" CssClass="form-control" MaxLength="50" />
+														<label class="control-label small text-dark"><span data-field-id="50167">Member Number</span></label>
+													</asp:Panel>
+												</div>
+
+												<div class="row">
+													<div class="col-md-2">
+														<div>
+															<asp:Literal ID="litLockout" runat="server" Visible="false" />
+														</div>
+														<asp:DropDownList ID="ddlLockout" runat="Server" CssClass="form-control">
+															<asp:ListItem Text="Yes" data-field-id="50204-1" Value="1" />
+															<asp:ListItem Text="No" data-field-id="50204-2" Value="0" />
+														</asp:DropDownList>
+														<label class="control-label small text-dark"><span data-field-id="50168">Lock Account?</span></label>
+													</div>
+													<div class="col-md-6" id="panProgramAdmin" visible="false" runat="server">
+														<telerik:RadComboBox ID="rcbProgramAdmin" data-field-id="30013-{0}-ProgramName" runat="server" EmptyMessage="-- Select Program --" Localization-CheckAllString="Select all" DataTextField="Lable" DataValueField="Value" EnableCheckAllItemsCheckBox="true" CheckBoxes="true" Skin="Bootstrap" DropDownAutoWidth="Disabled" Width="100%">
+															<Localization CheckAllString="-- All Programs --" AllItemsCheckedString="-- All Programs --" />
+														</telerik:RadComboBox>
+														<label class="control-label small text-dark"><span data-field-id="50169">Program Admin</span></label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<hr />
+										<%--===========================================================[End Account Info Row]================================================================--%>
+										<div class="row mar-top">
+											<div class="col-md-12">
+												<asp:Panel runat="server" ID="panAccountChecks">
+													<asp:Panel ID="panFlagRoster" runat="server">
+														<asp:CheckBox ID="chkFlagRoster" CssClass="checkbox-list" runat="Server" Text="<span data-field-id='2239'>DO NOT include in Public View</span>" />
+													</asp:Panel>
+													<div>
+														<asp:CheckBox ID="chkFlagEmail" Visible="false" CssClass="checkbox-list" runat="Server" Text="DO NOT include Email Address in Diplomate Roster" />
+													</div>
+													<asp:Panel ID="panFlagAddress" runat="server">
+														<asp:CheckBox ID="chkFlagAddress" CssClass="checkbox-list" runat="Server" Text="<span data-field-id='2240'>DO NOT show Address in Public View</span>" />
+													</asp:Panel>
+													<asp:Panel ID="panFlagProfilePhoto" runat="server">
+														<asp:CheckBox ID="chkFlagProfilePhoto" CssClass="checkbox-list" runat="Server" Text="<span data-field-id='2241'>DO NOT show Profile Photo in Public View</span>" />
+													</asp:Panel>
+												</asp:Panel>
+											</div>
+										</div>
+
+									</div>
+								</asp:Panel>
+							</div>
+						</div>
+						<%--===========================================================[End Account Info Row]================================================================--%>
+						<div class="row">
+							<div class="col-md-12">
+								<asp:Panel runat="server" ID="panSecurity" CssClass="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">Security</h4>
+									</div>
+									<div class="panel-body">
+										<div class="row">
+											<div class="col-md-12">
+												<asp:Panel runat="server" ID="panPasswordUpdate" Visible="false">
+													<input type="button" onclick="return OpenPasswordPopup();" value="Change Password" class="btn btn-success ml20" />
+												</asp:Panel>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<asp:Panel ID="panPasswordNew" runat="server" Visible="false">
+													<UC1:PasswordSecurityAuthentication ID="ucPasswordSecurityAuthentication" runat="server" />
+													<div class="form-group">
+														<div class="row">
+															<div class="col-sm-3">
+																<div class="passwordFlexDiv">
+																	<asp:TextBox ClientIDMode="Static" ID="txtNewPassword" autocomplete="off" CssClass="form-control txt-password txtPasswordInput" PreferredPasswordLength="6" MinimumNumericCharacters="1" MinimumUpperCaseCharacters="1" MinimumLowerCaseCharacters="1" MinimumSymbolCharacters="1" CalculationWeightings="10;25;20;35" MaxLength="50" TextMode="Password" runat="server" />
+																	<telerik:RadInputManager Visible="false" RenderMode="Lightweight" Skin="Bootstrap" runat="server" ID="RadInputManager1">
+																		<telerik:TextBoxSetting>
+																			<TargetControls>
+																				<telerik:TargetInput ControlID="txtNewPassword"></telerik:TargetInput>
+																			</TargetControls>
+																			<PasswordStrengthSettings ShowIndicator="true"></PasswordStrengthSettings>
+																		</telerik:TextBoxSetting>
+																	</telerik:RadInputManager>
+																	<div runat="server" class="input-group-addon showHidePasswordDiv">
+																		<button class="btnPasswordToggleView" onclick="ShowHidePassword('txtNewPassword','btnToggleNewPassword')" type="button"><i class="fa fa-eye-slash fa-lg" aria-hidden="true" id="btnToggleNewPassword"></i></button>
+																	</div>
+																</div>
+																<label class="control-label small text-dark">Password<span class="req">*</span></label>
+															</div>
+															<div class="col-sm-3">
+																<div class="passwordFlexDiv">
+																	<asp:TextBox ClientIDMode="Static" ID="txtPasswordConfirm" CssClass="form-control txt-ConfirmPassword txtPasswordInput" MaxLength="50" autocomplete="off" TextMode="Password" runat="server" />
+																	<div runat="server" class="input-group-addon showHidePasswordDiv">
+																		<button class="btnPasswordToggleView" onclick="ShowHidePassword('txtPasswordConfirm','btnTogglePasswordConfirm')" type="button"><i class="fa fa-eye-slash fa-lg" aria-hidden="true" id="btnTogglePasswordConfirm"></i></button>
+																	</div>
+																</div>
+																<label class="control-label small text-dark">Re-Type Password<span class="req">*</span></label>
+															</div>
+														</div>
+													</div>
+												</asp:Panel>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<asp:Panel ID="panSec" runat="server" Visible="false">
+													<div class="form-group">
+														<div class="col-md-8">
+															<asp:DropDownList ID="ddlSecurityQuestion1" AutoPostBack="True" CssClass="form-control" runat="server" />
+															<label class="control-label small text-dark">Security Question 1<span class="req">*</span></label>
+														</div>
+														<div class="col-md-4">
+															<asp:TextBox ID="txtAnswer1" CssClass="form-control" MaxLength="150" runat="server" />
+															<label class="control-label small text-dark">Answer 1<span class="req">*</span></label>
+														</div>
+													</div>
+													<div class="form-group">
+														<div class="col-md-8">
+															<asp:DropDownList ID="ddlSecurityQuestion2" AutoPostBack="True" CssClass="form-control" runat="server" />
+															<label class="control-label small text-dark">Security Question 2<span class="req">*</span></label>
+														</div>
+														<div class="col-md-4">
+															<asp:TextBox ID="txtAnswer2" CssClass="form-control" MaxLength="150" runat="server" />
+															<label class="control-label small text-dark">Answer 2<span class="req">*</span></label>
+														</div>
+													</div>
+													<div class="form-group">
+														<div class="col-md-8">
+															<asp:DropDownList ID="ddlSecurityQuestion3" AutoPostBack="True" CssClass="form-control" runat="server" />
+															<label class="control-label small text-dark">Security Question 3<span class="req">*</span></label>
+														</div>
+														<div class="col-md-4">
+															<asp:TextBox ID="txtAnswer3" CssClass="form-control" MaxLength="150" runat="server" />
+															<label class="control-label small text-dark">Answer 3<span class="req">*</span></label>
+														</div>
+													</div>
+												</asp:Panel>
+											</div>
+										</div>
+									</div>
+								</asp:Panel>
+							</div>
+						</div>
+						<%--===========================================================[End Security Panel]================================================================--%>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-borderless">
+									<div class="panel-heading">
+										<h4 class="panel-title"><span data-field-id="50170">Associated Files</span></h4>
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<asp:Panel ID="panLV" runat="server">
+											<asp:ListView runat="server" OnItemCommand="lv_ItemCommand" OnItemDeleting="lv_ItemDeleting" ID="lv" DataKeyNames="ItemGUID">
+												<LayoutTemplate>
+													<table class="table table-bordered">
+														<thead>
+															<tr class="altRow">
+																<th><span data-field-id="50171">Associated Files</span></th>
+																<th><span data-field-id="50172">Created</span></th>
+																<th><span data-field-id="50173">Uploaded By</span></th>
+															</tr>
+														</thead>
+														<tbody>
+															<asp:PlaceHolder runat="server" ID="itemPlaceholder"></asp:PlaceHolder>
+														</tbody>
+													</table>
+												</LayoutTemplate>
+												<ItemTemplate>
+													<tr class="<%# If(Container.DisplayIndex Mod 2 = 0, "", "altRow") %>">
+														<td style="width: 50%">
+															<asp:Literal runat="server" ID="litImg" />
+															<asp:HyperLink ID="btnFile" CssClass="btn btn-link" runat="server" Text='<%# Eval("Name")%>' />
+															<asp:LinkButton ID="btnDeleteFile" CommandName="Delete" CommandArgument='<%# Eval("ItemGUID")%>' CssClass="btn btn-link" runat="server" OnClientClick="if (!confirm(getAlertTranslation('1', 'Are you sure you want to delete this file? This action cannot be undone.', '50210'),'Warning','Ok','Cancel',null,this)) {return false;}">
+															<i class="fa fa-trash" aria-hidden="true"></i>
+															</asp:LinkButton>
+														</td>
+														<td style="width: 25%">
+															<asp:Literal runat="server" ID="Created" Text='<%# Eval("DateCreated", "{0:MM/dd/yy  h:mm tt}") %>' />
+														</td>
+														<td style="width: 25%">
+															<%# Eval("FullName").ToString()%>
+														</td>
+													</tr>
+												</ItemTemplate>
+											</asp:ListView>
+										</asp:Panel>
+									</div>
+
+									<div class="row">
+										<div class="form-group form-fileUpload">
+											<div class="col-md-12">
+												<telerik:RadAsyncUpload runat="server" ID="radFilesUpload" ClientIDMode="Static" MultipleFileSelection="Automatic" MaxFileSize="20971520" AllowedFileExtensions="doc,docx,ppt,xls,pdf,zip,pptx,xlsx,jpg" Skin="Bootstrap" Width="200px" OverwriteExistingFiles="true" OnClientValidationFailed="validationFailedFiles" OnClientFileUploadFailed="onUploadFailedFiles" OnClientFileSelected="onFileSelectedFiles" OnClientFileUploaded="onFileUploadedFiles" />
+												<telerik:RadProgressArea runat="server" ID="radProgressFile" />
+												<label class="control-label small text-dark"><span data-field-id="50174">Files should be less than 20 MB. Only doc, docx, ppt, xls, pdf, zip, pptx, xlsx, jpg files are allowed.</span></label>
+											</div>
+										</div>
+										<div class="form-group" runat="server" id="panImage">
+											<div class="col-md-12">
+												<label class="control-label small text-dark">Image<asp:Literal ID="litImageReq" runat="server" /></label>
+												<telerik:RadBinaryImage runat="server" ID="rbiImages" />
+												<div class="clearfix"></div>
+												<asp:CheckBox ID="chkImage" data-field-id="50175" Checked="false" runat="server" Text="Delete Image?" onclick="if (!confirm('getAlertTranslation('1', 'Are you sure you want to delete this image?', '50209')','Warning','Ok','Cancel',null,this)) {return false;}" AutoPostBack="true" />
+												<asp:TextBox ID="txtFlagSiteThumb" runat="server" Visible="false" />
+
+												<telerik:RadAsyncUpload ID="fileStandard" runat="server" ClientIDMode="Static" InitialFileInputsCount="1" MaxFileInputsCount="1" AllowedFileExtensions=".jpg,.png,.gif,.jpeg" Skin="Bootstrap" OnClientValidationFailed="validationFailed" OnClientFileSelected="onFileSelected" OnClientFileUploadRemoved="OnClientFileUploadRemoved" />
+												<div class="small">
+													<asp:Literal ID="litTextCropProfileImage" runat="server" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div id="uploaded_image" class="col-md-12">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<%--===========================================================[End Associated Files]================================================================--%>
+						<div class="row" id="panCEProvider" runat="server" visible="false">
+							<div class="col-md-12">
+								<div class="panel panel-borderless">
+									<div class="panel-heading">
+										<h4 class="panel-title">CE Provider</h4>
+										<asp:Literal ID="litReviewNeeded" Text="0" runat="server" Visible="false" />
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="control-label">
+											CE Provider Program<span class="req">*</span>
+										</label>
+										<div>
+											<asp:DropDownList ID="ddlProgram" runat="server" CssClass="form-control" Width="30%" AutoPostBack="true" OnSelectedIndexChanged="ddlProgram_SelectedIndexChanged" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label">
+											Active CE Provider<span class="req">*</span>
+										</label>
+										<div>
+											No &nbsp;<asp:CheckBox ID="chkActiveCEProvider" runat="server" Text=" " AutoPostBack="true" />Yes
+										</div>
+									</div>
+									<asp:Panel ID="panCEProviderForm" runat="server" Visible="false">
+										<div class="form-group" id="divCEProviderStatus" runat="server">
+											<label class="control-label">
+												Provider Status<span class="req">*</span>
+											</label>
+											<asp:DropDownList ID="ddlProviderStatus" runat="server" CssClass="form-control" ToolTip="Provider Status" Width="250px" />
+										</div>
+										<div class="form-group">
+											<label class="control-label">
+												CE Provider has Program Admin Privileges<span class="req">*</span>
+											</label>
+											<div>
+												No &nbsp;<asp:CheckBox ID="chkCEProviderAdmin" runat="server" Text=" " />Yes
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label">
+												CE Providers can see Portal User's contact information<span class="req">*</span>
+											</label>
+											<div>
+												No &nbsp;<asp:CheckBox ID="chkCECanAccountInfo" runat="server" Text=" " />Yes
+											</div>
+										</div>
+									</asp:Panel>
+								</div>
+							</div>
+						</div>
+						<%--===========================================================[End CE Provider]================================================================--%>
+					</div>
+				</div>
+			</div>
+			<%--===========================================================[End Main Panels Row]================================================================--%>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="flex-container">
+						<div class="m-5">
+							<asp:LinkButton ID="btnModify" CssClass="btn btn-success" data-field-id="50176" Text="Update" ValidationGroup="Member" OnClientClick="return validateFile();" runat="server" />
+						</div>
+						<div class="m-5">
+							<asp:LinkButton ID="btnUpdateListing" CssClass="btn btn-default" data-field-id="50177" Text="Update and Return to Listing" OnClientClick="return validateFile();" ValidationGroup="Member" runat="server" />
+						</div>
+						<div class="m-5">
+							<asp:LinkButton ID="btnDeleteMember" CssClass="btn btn-danger" data-field-id="50179" Text="Delete User" runat="server" /><asp:LinkButton ID="btnDelete" CssClass="btn btn-danger" data-field-id="50180" OnClientClick="if (!confirm('Are you sure you want to delete this item and all items associated with it? This action cannot be undone.','Warning','Ok','Cancel',null,this)) {return false;}" Text="Delete User" runat="server" Visible="false" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr />
+			<%--==================================================--%>
+			<div class="row mar-top">
+				<div class="col-sm-12">
+					<asp:HyperLink ID="lnkBack" CssClass="btn btn-default" runat="server">&laquo;&nbsp;<span data-field-id="50178">Back to Listing</span></asp:HyperLink>
+				</div>
+			</div>
+			<%--===========================================================[End Button Row]================================================================--%>
+		</div>
+	</div>
+</div>

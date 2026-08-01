@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: app-config
+  namespace: cloudnativeecommerce
+
+data:
+  # Identity Service
+  ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=IdentityDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True"
+
+  Jwt__Issuer: "IdentityService"
+  Jwt__Audience: "CloudNativeEcommerce"
+
+  # Product Service
+  MongoDbSettings__ConnectionString: "mongodb://mongodb:27017"
+  MongoDbSettings__DatabaseName: "ProductDb"
+  MongoDbSettings__ProductsCollectionName: "Products"
+
+  # RabbitMQ
+  RabbitMQ__HostName: "rabbitmq"
+
+  Serilog__SeqServerUrl: http://seq:5341

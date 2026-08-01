@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: cloudnativeecommerce-ingress
+  namespace: cloudnativeecommerce
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+  - host: cloudnative.local
+
+    http:
+
+      paths:
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: apigateway
+            port:
+              number: 8080

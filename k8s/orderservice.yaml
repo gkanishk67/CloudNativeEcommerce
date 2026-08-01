@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: orderservice-config
+  namespace: cloudnativeecommerce
+
+data:
+  RabbitMQ__Host: "rabbitmq"
+  RabbitMQ__Queue: "order-created"
+  Serilog__SeqServerUrl: "http://seq:5341"
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: orderservice
+  namespace: cloudnativeecommerce
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: orderservice
+
+  template:
+    metadata:
+      labels:
+        app: orderservice
+
+    spec:
+      containers:
+      - name: orderservice
+
+        image: cloudnativeecommerce-orderservice:latest
+        imagePullPolicy: Never
+
+        ports:
+        - containerPort: 8080
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+        envFrom:
+        - configMapRef:
+            name: orderservice-config
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 3
+
+---
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: orderservice
+  namespace: cloudnativeecommerce
+
+spec:
+  selector:
+    app: orderservice
+
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+  type: ClusterIP
