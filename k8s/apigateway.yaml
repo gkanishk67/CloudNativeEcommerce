@@ -21,8 +21,11 @@ spec:
       containers:
       - name: apigateway
 
-        image: cloudnativeecommerce-apigateway:latest
-        imagePullPolicy: Never
+        # image: cloudnativeecommerce-apigateway:latest
+        # imagePullPolicy: Never
+
+        image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 8080

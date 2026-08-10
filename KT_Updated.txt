@@ -1,0 +1,2393 @@
+# CloudNativeEcommerce – Complete KT / Rebuild & Operations Guide
+
+This KT is the single restart/reference guide for the CloudNativeEcommerce project.
+
+It covers:
+- .NET microservices
+- Docker / Docker Compose
+- SQL Server, MongoDB, RabbitMQ
+- Serilog + Seq
+- Kubernetes
+- Helm
+- Terraform
+- Azure Container Registry (ACR)
+- Azure Kubernetes Service (AKS)
+- ingress-nginx
+- Azure Load Balancer health-probe fix
+- rebuilding the whole environment from scratch
+- image build/push/deploy flow
+- debugging commands
+- port-forwarding
+
+> IMPORTANT SECURITY NOTE
+> Never store real passwords, JWT keys, Docker tokens, Azure service-principal passwords, or other credentials in this KT.
+> Use placeholders such as <SQL_PASSWORD>, <JWT_KEY>, <AZURE_CLIENT_SECRET>.
+> If a real credential was previously pasted into a KT, rotate it and remove it from Git/history.
+
+---
+
+# 1. Project Overview
+
+CloudNativeEcommerce is a .NET 8 microservices application.
+
+Services:
+
+- IdentityService
+  - .NET Web API
+  - SQL Server
+  - JWT authentication
+- ProductService
+  - .NET Web API
+  - MongoDB
+- OrderService
+  - .NET Web API
+  - RabbitMQ producer
+- API Gateway
+  - YARP reverse proxy
+  - routes requests to the internal services
+
+Infrastructure:
+
+- SQL Server
+- MongoDB
+- RabbitMQ
+- Seq
+- Kubernetes
+- ingress-nginx
+- Azure Container Registry
+- Azure Kubernetes Service
+- Terraform
+- Helm
+
+---
+
+# 2. High-Level Architecture
+
+```text
+                         Internet / Client
+                                |
+                                v
+                    Azure Load Balancer
+                                |
+                                v
+                         ingress-nginx
+                                |
+                                v
+                         Kubernetes Ingress
+                                |
+                                v
+                         API Gateway
+                              YARP
+                    /identity /products /orders
+                         /        |        \
+                        v         v         v
+                 Identity     Product     Order
+                 Service      Service     Service
+                    |            |           |
+                    v            v           v
+                SQL Server    MongoDB     RabbitMQ
+                                             |
+                                             v
+                                      Product consumer
+                                             |
+                                             v
+                                          MongoDB
+```
+
+Logging:
+
+```text
+Services
+   |
+   v
+Serilog
+   |
+   v
+Seq
+```
+
+---
+
+# 3. What Each Major Technology Does
+
+## .NET 8
+
+Runs all application services.
+
+## Docker
+
+Packages each service and its dependencies into repeatable images.
+
+## Docker Compose
+
+Used for local development.
+
+It runs SQL Server, MongoDB, RabbitMQ, Seq and application containers locally.
+
+## Kubernetes
+
+Runs the application in a cluster.
+
+## Deployment
+
+Maintains the desired number of Pods.
+
+Example:
+
+```yaml
+replicas: 2
+```
+
+## Pod
+
+Runs the actual container.
+
+Pods are disposable.
+
+## Service
+
+Provides stable internal networking.
+
+Examples:
+
+```text
+sqlserver
+mongodb
+rabbitmq
+seq
+identityservice
+productservice
+orderservice
+apigateway
+```
+
+The Pod IP can change; the Service name remains stable.
+
+## ConfigMap
+
+Stores non-sensitive configuration.
+
+Examples:
+
+```text
+MongoDB connection string
+RabbitMQ host
+Seq URL
+JWT issuer
+JWT audience
+```
+
+## Secret
+
+Stores sensitive configuration.
+
+Examples:
+
+```text
+SQL password
+JWT signing key
+connection strings containing passwords
+```
+
+## Helm
+
+Packages and deploys Kubernetes resources.
+
+## Terraform
+
+Creates Azure infrastructure.
+
+Current infrastructure:
+
+```text
+Resource Group
+    |
+    +-- ACR
+    |
+    +-- AKS
+```
+
+## ACR
+
+Azure Container Registry stores Docker images.
+
+Example:
+
+```text
+cloudnativeecommerceacr67.azurecr.io
+```
+
+## AKS
+
+Azure Kubernetes Service runs Kubernetes in Azure.
+
+## ingress-nginx
+
+Provides the external HTTP/HTTPS entry point into the cluster.
+
+---
+
+# 4. Repository Structure
+
+Typical project structure:
+
+```text
+CloudNativeEcommerce/
+│
+├── src/
+│   ├── ApiGateway/
+│   ├── IdentityService/
+│   ├── ProductService/
+│   └── OrderService/
+│
+├── helm/
+│   └── cloudnativeecommerce/
+│       ├── Chart.yaml
+│       ├── values.yaml
+│       └── templates/
+│           └── cloudnativeecommerce.yaml
+│
+├── terraform/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   └── terraform.tfvars
+│
+├── ingress-nginx-values.yaml
+│
+└── cloudnativeecommerce-0.1.0.tgz
+```
+
+---
+
+# 5. Local Docker Compose
+
+Start:
+
+```cmd
+docker compose up -d
+```
+
+Build and start:
+
+```cmd
+docker compose up -d --build
+```
+
+Stop:
+
+```cmd
+docker compose down
+```
+
+Check containers:
+
+```cmd
+docker ps
+```
+
+Logs:
+
+```cmd
+docker logs <container-name>
+```
+
+Images:
+
+```cmd
+docker images
+```
+
+---
+
+# 6. Local Infrastructure Ports
+
+Typical local ports:
+
+```text
+SQL Server     1433
+MongoDB        27017
+RabbitMQ       5672
+RabbitMQ UI    15672
+Seq            5341
+```
+
+RabbitMQ UI:
+
+```text
+http://localhost:15672
+```
+
+Seq:
+
+```text
+http://localhost:5341
+```
+
+Do not put real credentials in this document.
+
+---
+
+# 7. Application Configuration
+
+## ProductService
+
+Kubernetes ConfigMap:
+
+```text
+MongoDbSettings__ConnectionString = mongodb://mongodb:27017
+MongoDbSettings__DatabaseName = ProductDb
+MongoDbSettings__ProductsCollectionName = Products
+Serilog__SeqServerUrl = http://seq:5341
+```
+
+## OrderService
+
+```text
+RabbitMQ__Host = rabbitmq
+RabbitMQ__Queue = order-created
+Serilog__SeqServerUrl = http://seq:5341
+```
+
+## IdentityService
+
+ConfigMap:
+
+```text
+Jwt__Issuer = IdentityService
+Jwt__Audience = CloudNativeEcommerce
+Serilog__SeqServerUrl = http://seq:5341
+```
+
+Secret:
+
+```text
+ConnectionStrings__DefaultConnection
+Jwt__Key
+```
+
+ASP.NET Core reads these through:
+
+```csharp
+builder.Configuration
+```
+
+---
+
+# 8. API Gateway / YARP
+
+The API Gateway routes:
+
+```text
+/identity/*  -> identityservice:8080
+/products/*  -> productservice:8080
+/orders/*    -> orderservice:8080
+```
+
+Example internal destinations:
+
+```text
+http://identityservice:8080/
+http://productservice:8080/
+http://orderservice:8080/
+```
+
+These Kubernetes Service names are used instead of Pod IPs.
+
+---
+
+# 9. Health Checks
+
+Application services expose:
+
+```text
+/health
+```
+
+Kubernetes uses this for:
+
+```text
+livenessProbe
+readinessProbe
+```
+
+Example:
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+```
+
+If a Pod is running but `/health` fails, Kubernetes may remove it from service traffic or restart it.
+
+---
+
+# 10. Serilog + Seq
+
+Services use Serilog.
+
+Seq receives structured logs.
+
+Kubernetes service:
+
+```text
+seq:80
+```
+
+OTLP endpoint used by OpenTelemetry:
+
+```text
+http://seq:5341/ingest/otlp/v1/traces
+```
+
+Seq is useful for:
+
+- application logs
+- request logs
+- exceptions
+- distributed tracing
+
+---
+
+# 11. Kubernetes Architecture
+
+```text
+Namespace
+   |
+   +-- Deployment
+          |
+          +-- ReplicaSet
+                  |
+                  +-- Pods
+                          |
+                          +-- Container
+```
+
+Namespace:
+
+```text
+cloudnativeecommerce
+```
+
+Application Deployments:
+
+```text
+apigateway
+identityservice
+productservice
+orderservice
+mongodb
+rabbitmq
+seq
+sqlserver
+```
+
+Current intended scaling:
+
+```text
+productservice = 2 replicas
+```
+
+Check:
+
+```cmd
+kubectl get deployments -n cloudnativeecommerce
+```
+
+---
+
+# 12. Kubernetes Services
+
+Check:
+
+```cmd
+kubectl get svc -n cloudnativeecommerce
+```
+
+Application services are normally:
+
+```text
+ClusterIP
+```
+
+This means they are reachable internally but not directly from the Internet.
+
+Example:
+
+```text
+productservice:8080
+orderservice:8080
+identityservice:8080
+```
+
+Infrastructure:
+
+```text
+mongodb:27017
+rabbitmq:5672
+seq:80 / 5341
+sqlserver:1433
+```
+
+---
+
+# 13. Helm Application Deployment
+
+Check chart:
+
+```cmd
+helm lint helm\cloudnativeecommerce
+```
+
+Render templates:
+
+```cmd
+helm template cloudnativeecommerce helm\cloudnativeecommerce ^
+  -n cloudnativeecommerce
+```
+
+Check replicas:
+
+```cmd
+helm template cloudnativeecommerce helm\cloudnativeecommerce ^
+  -n cloudnativeecommerce | findstr /C:"replicas:"
+```
+
+Package:
+
+```cmd
+helm package helm\cloudnativeecommerce
+```
+
+Install:
+
+```cmd
+helm upgrade --install cloudnativeecommerce ^
+  helm\cloudnativeecommerce ^
+  -n cloudnativeecommerce ^
+  --create-namespace
+```
+
+Check release:
+
+```cmd
+helm status cloudnativeecommerce -n cloudnativeecommerce
+```
+
+Check values:
+
+```cmd
+helm get values cloudnativeecommerce -n cloudnativeecommerce
+```
+
+---
+
+# 14. Ingress
+
+Ingress routes external requests.
+
+Current host:
+
+```text
+cloudnative.local
+```
+
+Check:
+
+```cmd
+kubectl get ingress -n cloudnativeecommerce
+```
+
+Describe:
+
+```cmd
+kubectl describe ingress cloudnativeecommerce-ingress ^
+  -n cloudnativeecommerce
+```
+
+Current architecture:
+
+```text
+Internet
+   |
+   v
+Azure public IP
+   |
+   v
+ingress-nginx LoadBalancer
+   |
+   v
+cloudnativeecommerce Ingress
+   |
+   v
+API Gateway
+```
+
+---
+
+# 15. ingress-nginx Installation
+
+Add repository:
+
+```cmd
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+```
+
+Update:
+
+```cmd
+helm repo update
+```
+
+IMPORTANT:
+
+The following file must exist in the project root:
+
+```text
+ingress-nginx-values.yaml
+```
+
+Contents:
+
+```yaml
+controller:
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```
+
+Install:
+
+```cmd
+helm upgrade --install ingress-nginx ingress-nginx ^
+  --repo https://kubernetes.github.io/ingress-nginx ^
+  --namespace ingress-nginx ^
+  --create-namespace ^
+  -f ingress-nginx-values.yaml
+```
+
+Verify:
+
+```cmd
+kubectl get pods -n ingress-nginx
+```
+
+Verify Service:
+
+```cmd
+kubectl get svc ingress-nginx-controller -n ingress-nginx
+```
+
+Verify Helm owns the configuration:
+
+```cmd
+helm get values ingress-nginx -n ingress-nginx
+```
+
+Expected:
+
+```yaml
+USER-SUPPLIED VALUES:
+controller:
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```
+
+---
+
+# 16. IMPORTANT: Azure Load Balancer Health Probe Issue
+
+This was one of the major issues encountered.
+
+The ingress-nginx Service had:
+
+```yaml
+appProtocol: http
+```
+
+Azure therefore created an HTTP health probe.
+
+Without the explicit annotation, Azure probed:
+
+```text
+/
+```
+
+But ingress-nginx returned:
+
+```text
+404
+```
+
+So Azure considered the backend unhealthy.
+
+Result:
+
+```text
+Browser/curl
+   |
+   v
+Azure Load Balancer
+   |
+   X
+No healthy backend
+```
+
+Symptoms:
+
+```text
+Connection timeout
+```
+
+while internal traffic could still work.
+
+The permanent fix is:
+
+```yaml
+service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```
+
+ingress-nginx returns:
+
+```text
+/healthz -> 200 OK
+```
+
+Therefore Azure sees a healthy backend.
+
+### NEVER manually annotate the Service after this configuration is in place.
+
+Do NOT rely on:
+
+```cmd
+kubectl annotate svc ...
+```
+
+The Helm values file is the source of truth.
+
+Every future ingress-nginx installation must use:
+
+```cmd
+-f ingress-nginx-values.yaml
+```
+
+---
+
+# 17. Verify Azure Ingress After Rebuild
+
+Get ingress:
+
+```cmd
+kubectl get ingress -A
+```
+
+Get ingress-nginx Service:
+
+```cmd
+kubectl get svc ingress-nginx-controller -n ingress-nginx
+```
+
+Get Azure public IP:
+
+```cmd
+az network public-ip list ^
+  --resource-group MC_CloudNativeEcommerce-RG_cloudnativeecommerce-aks_centralindia ^
+  --query "[].{Name:name,IP:ipAddress}" ^
+  -o table
+```
+
+IMPORTANT:
+
+Do NOT hard-code the old public IP.
+
+The IP can change after destroying/recreating AKS.
+
+Use the newly returned IP.
+
+---
+
+# 18. cloudnative.local Hostname
+
+For local development, the Windows hosts file may map:
+
+```text
+<NEW_INGRESS_PUBLIC_IP> cloudnative.local
+```
+
+Hosts file:
+
+```text
+C:\Windows\System32\drivers\etc\hosts
+```
+
+Edit Notepad as Administrator.
+
+Example:
+
+```text
+20.x.x.x cloudnative.local
+```
+
+The actual Azure IP must be obtained after every rebuild.
+
+Verify DNS:
+
+```cmd
+nslookup cloudnative.local
+```
+
+If using a hosts-file entry, `nslookup` may not always reflect it depending on DNS behavior. A direct curl test is often more useful.
+
+Test:
+
+```cmd
+curl -v http://cloudnative.local/
+```
+
+---
+
+# 19. Port Forwarding
+
+Port-forwarding is temporary and exists only while the command is running.
+
+## Seq
+
+```cmd
+kubectl port-forward svc/seq 5341:80 -n cloudnativeecommerce
+```
+
+Then open:
+
+```text
+http://localhost:5341
+```
+
+IMPORTANT:
+
+If the command window is closed, the port-forward stops.
+
+## RabbitMQ Management UI
+
+```cmd
+kubectl port-forward svc/rabbitmq 15672:15672 -n cloudnativeecommerce
+```
+
+Open:
+
+```text
+http://localhost:15672
+```
+
+## SQL Server
+
+```cmd
+kubectl port-forward svc/sqlserver 1433:1433 -n cloudnativeecommerce
+```
+
+Then connect locally to:
+
+```text
+localhost,1433
+```
+
+## MongoDB
+
+```cmd
+kubectl port-forward svc/mongodb 27017:27017 -n cloudnativeecommerce
+```
+
+Then:
+
+```text
+mongodb://localhost:27017
+```
+
+## API Gateway
+
+```cmd
+kubectl port-forward svc/apigateway 8080:8080 -n cloudnativeecommerce
+```
+
+Then test:
+
+```text
+http://localhost:8080
+```
+
+## IdentityService
+
+Example:
+
+```cmd
+kubectl port-forward svc/identityservice 5001:8080 -n cloudnativeecommerce
+```
+
+Then:
+
+```text
+http://localhost:5001
+```
+
+The local port can be changed if already occupied.
+
+---
+
+# 20. Kubernetes Daily Verification
+
+After deployment:
+
+```cmd
+kubectl get nodes
+```
+
+```cmd
+kubectl get pods -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get deployments -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get svc -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get ingress -n cloudnativeecommerce
+```
+
+Expected:
+
+```text
+All application Pods -> Running
+All required Deployments -> Available
+Ingress -> nginx
+```
+
+Watch Pods:
+
+```cmd
+kubectl get pods -n cloudnativeecommerce -w
+```
+
+---
+
+# 21. Common Kubernetes Debugging
+
+## ImagePullBackOff / ErrImagePull
+
+Check:
+
+```cmd
+kubectl describe pod <pod-name> -n cloudnativeecommerce
+```
+
+Check events:
+
+```cmd
+kubectl get events -n cloudnativeecommerce --sort-by=.lastTimestamp
+```
+
+Check image:
+
+```cmd
+kubectl get deployment <service> ^
+  -n cloudnativeecommerce ^
+  -o jsonpath="{.spec.template.spec.containers[0].image}"
+```
+
+Common causes:
+
+- image was not pushed
+- wrong ACR name
+- wrong image tag
+- AKS cannot pull from ACR
+- role assignment missing
+
+---
+
+# 22. ACR Authentication
+
+Login:
+
+```cmd
+az acr login --name cloudnativeecommerceacr67
+```
+
+If Docker Desktop is not running, this can fail with:
+
+```text
+DOCKER_COMMAND_ERROR
+dockerDesktopLinuxEngine
+```
+
+Start Docker Desktop and retry.
+
+Alternatively, Azure can provide a token:
+
+```cmd
+az acr login --name cloudnativeecommerceacr67 --expose-token
+```
+
+---
+
+# 23. AKS -> ACR Permission
+
+AKS kubelet identity needs:
+
+```text
+AcrPull
+```
+
+Terraform configuration:
+
+```hcl
+resource "azurerm_role_assignment" "aks_acr_pull" {
+  principal_id = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+
+  role_definition_name = "AcrPull"
+
+  scope = azurerm_container_registry.acr.id
+}
+```
+
+If Azure says:
+
+```text
+RoleAssignmentExists
+```
+
+do not create a duplicate assignment.
+
+Check Terraform state:
+
+```cmd
+terraform state list
+```
+
+If it already contains:
+
+```text
+azurerm_role_assignment.aks_acr_pull
+```
+
+Terraform is already tracking it.
+
+Then:
+
+```cmd
+terraform plan
+```
+
+should eventually show no infrastructure changes.
+
+---
+
+# 24. Docker Build and Push to ACR
+
+From project root:
+
+```cmd
+az acr login --name cloudnativeecommerceacr67
+```
+
+Build example:
+
+```cmd
+docker build -t cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest ^
+  -f src\ApiGateway\Dockerfile .
+```
+
+Push:
+
+```cmd
+docker push cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest
+```
+
+Identity:
+
+```cmd
+docker build -t cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest ^
+  -f src\IdentityService\Dockerfile .
+docker push cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest
+```
+
+Product:
+
+```cmd
+docker build -t cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest ^
+  -f src\ProductService\Dockerfile .
+docker push cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+```
+
+Orders:
+
+```cmd
+docker build -t cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest ^
+  -f src\OrderService\Dockerfile .
+docker push cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest
+```
+
+IMPORTANT:
+
+Run these commands from the repository root because the Dockerfiles use paths such as:
+
+```text
+src/ApiGateway/ApiGateway.csproj
+```
+
+We previously hit this problem when the Docker build context/path did not match the Dockerfile.
+
+---
+
+# 25. Rebuild Images After C# Changes
+
+Example:
+
+```cmd
+docker build -t cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest ^
+  -f src\ProductService\Dockerfile .
+```
+
+Then:
+
+```cmd
+docker push cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+```
+
+Because the Kubernetes Deployment uses:
+
+```yaml
+imagePullPolicy: Always
+```
+
+restart the Deployment:
+
+```cmd
+kubectl rollout restart deployment/productservice ^
+  -n cloudnativeecommerce
+```
+
+Check:
+
+```cmd
+kubectl rollout status deployment/productservice ^
+  -n cloudnativeecommerce
+```
+
+---
+
+# 26. Terraform
+
+Terraform folder:
+
+```text
+terraform/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+└── terraform.tfvars
+```
+
+Initialize:
+
+```cmd
+cd terraform
+terraform init
+```
+
+Validate:
+
+```cmd
+terraform validate
+```
+
+Format:
+
+```cmd
+terraform fmt
+```
+
+Plan:
+
+```cmd
+terraform plan
+```
+
+Apply:
+
+```cmd
+terraform apply
+```
+
+Outputs:
+
+```cmd
+terraform output
+```
+
+State:
+
+```cmd
+terraform state list
+```
+
+Expected resources:
+
+```text
+azurerm_resource_group.main
+azurerm_container_registry.acr
+azurerm_kubernetes_cluster.aks
+azurerm_role_assignment.aks_acr_pull
+```
+
+---
+
+# 27. Terraform Rebuild Warning
+
+Terraform can destroy and recreate AKS when configuration differs from the existing cluster.
+
+A plan showing:
+
+```text
+-/+ destroy and then create replacement
+```
+
+means replacement.
+
+Always inspect the plan before approving.
+
+A Resource Group deletion can also fail if it contains resources Terraform does not currently manage.
+
+We encountered this with:
+
+```text
+Microsoft.KeyVault/vaults/cloudnativeecommercekv67
+```
+
+Terraform refused to delete the Resource Group because a resource still existed inside it.
+
+Do NOT blindly disable deletion protection.
+
+First identify the unmanaged resource:
+
+```cmd
+az resource list ^
+  --resource-group CloudNativeEcommerce-RG ^
+  -o table
+```
+
+Then decide whether it should be imported, explicitly deleted, or intentionally preserved.
+
+---
+
+# 28. Full Destroy / Rebuild Procedure
+
+This is the most important section.
+
+If the goal is to completely rebuild the Azure environment:
+
+## Step 1 – Confirm current Terraform state
+
+```cmd
+cd terraform
+terraform state list
+```
+
+```cmd
+terraform plan
+```
+
+Read the plan carefully.
+
+If it shows unexpected replacement/destruction, stop and inspect.
+
+## Step 2 – Destroy infrastructure
+
+```cmd
+terraform destroy
+```
+
+Confirm only after reviewing what will be destroyed.
+
+This destroys Terraform-managed Azure infrastructure.
+
+It can remove:
+
+```text
+Resource Group
+ACR
+AKS
+AKS node resource group
+Kubernetes cluster resources
+```
+
+It does NOT magically preserve Kubernetes workloads.
+
+If SQL Server, MongoDB, RabbitMQ, Seq and application Pods are running inside AKS, they disappear when AKS is destroyed.
+
+For this project, those are recreated from Helm after AKS is recreated.
+
+## Step 3 – Recreate Azure infrastructure
+
+```cmd
+terraform apply
+```
+
+Verify:
+
+```cmd
+terraform output
+```
+
+Expected:
+
+```text
+acr_login_server
+aks_name
+aks_resource_group
+resource_group_name
+```
+
+## Step 4 – Connect kubectl to the new AKS
+
+```cmd
+az aks get-credentials ^
+  --resource-group CloudNativeEcommerce-RG ^
+  --name cloudnativeecommerce-aks ^
+  --overwrite-existing
+```
+
+Verify:
+
+```cmd
+kubectl get nodes
+```
+
+## Step 5 – Install ingress-nginx WITH THE VALUES FILE
+
+IMPORTANT: Do not skip the values file.
+
+```cmd
+helm upgrade --install ingress-nginx ingress-nginx ^
+  --repo https://kubernetes.github.io/ingress-nginx ^
+  --namespace ingress-nginx ^
+  --create-namespace ^
+  -f ingress-nginx-values.yaml
+```
+
+Verify:
+
+```cmd
+kubectl get pods -n ingress-nginx
+```
+
+```cmd
+kubectl get svc -n ingress-nginx
+```
+
+Verify Helm values:
+
+```cmd
+helm get values ingress-nginx -n ingress-nginx
+```
+
+The `/healthz` Azure probe configuration must be present.
+
+NO MANUAL ANNOTATION SHOULD BE REQUIRED.
+
+## Step 6 – Build and push application images
+
+Start Docker Desktop.
+
+Login:
+
+```cmd
+az acr login --name cloudnativeecommerceacr67
+```
+
+Build/push all four services.
+
+## Step 7 – Deploy application Helm chart
+
+From project root:
+
+```cmd
+helm upgrade --install cloudnativeecommerce ^
+  helm\cloudnativeecommerce ^
+  -n cloudnativeecommerce ^
+  --create-namespace
+```
+
+## Step 8 – Verify Pods
+
+```cmd
+kubectl get pods -n cloudnativeecommerce
+```
+
+Wait until:
+
+```text
+1/1 Running
+```
+
+or:
+
+```text
+2/2 Running
+```
+
+for ProductService.
+
+## Step 9 – Verify Deployments
+
+```cmd
+kubectl get deployments -n cloudnativeecommerce
+```
+
+Expected:
+
+```text
+apigateway        1/1
+identityservice   1/1
+orderservice      1/1
+productservice    2/2
+mongodb           1/1
+rabbitmq          1/1
+seq               1/1
+sqlserver         1/1
+```
+
+## Step 10 – Verify Services
+
+```cmd
+kubectl get svc -n cloudnativeecommerce
+```
+
+## Step 11 – Verify Ingress
+
+```cmd
+kubectl get ingress -n cloudnativeecommerce
+```
+
+Expected:
+
+```text
+cloudnativeecommerce-ingress
+CLASS nginx
+HOST cloudnative.local
+```
+
+## Step 12 – Get the NEW Azure public IP
+
+```cmd
+kubectl get svc ingress-nginx-controller -n ingress-nginx
+```
+
+Or:
+
+```cmd
+az network public-ip list ^
+  --resource-group MC_CloudNativeEcommerce-RG_cloudnativeecommerce-aks_centralindia ^
+  --query "[].{Name:name,IP:ipAddress}" ^
+  -o table
+```
+
+The public IP may change after a rebuild.
+
+## Step 13 – Update Windows hosts file
+
+Run Notepad as Administrator.
+
+Edit:
+
+```text
+C:\Windows\System32\drivers\etc\hosts
+```
+
+Add:
+
+```text
+<NEW_PUBLIC_IP> cloudnative.local
+```
+
+Do not use the old IP from a previous cluster.
+
+## Step 14 – Test external traffic
+
+```cmd
+curl -v http://cloudnative.local/
+```
+
+If application routes are configured:
+
+```cmd
+curl -v http://cloudnative.local/products/<endpoint>
+```
+
+---
+
+# 29. Post-Rebuild Health Verification
+
+Run all:
+
+```cmd
+kubectl get nodes
+```
+
+```cmd
+kubectl get pods -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get deployments -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get svc -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get ingress -n cloudnativeecommerce
+```
+
+```cmd
+kubectl get pods -n ingress-nginx
+```
+
+```cmd
+kubectl get svc -n ingress-nginx
+```
+
+---
+
+# 30. Debugging Ingress Timeout
+
+If:
+
+```text
+curl http://cloudnative.local/
+```
+
+times out:
+
+## Check DNS / hosts
+
+```cmd
+ping cloudnative.local
+```
+
+```cmd
+nslookup cloudnative.local
+```
+
+## Check ingress
+
+```cmd
+kubectl get ingress -n cloudnativeecommerce
+```
+
+```cmd
+kubectl describe ingress cloudnativeecommerce-ingress ^
+  -n cloudnativeecommerce
+```
+
+## Check nginx
+
+```cmd
+kubectl get pods -n ingress-nginx
+```
+
+```cmd
+kubectl logs deployment/ingress-nginx-controller ^
+  -n ingress-nginx
+```
+
+## Check nginx Service
+
+```cmd
+kubectl get svc ingress-nginx-controller ^
+  -n ingress-nginx -o yaml
+```
+
+Confirm:
+
+```text
+type: LoadBalancer
+```
+
+and:
+
+```text
+service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```
+
+## Test health endpoint internally
+
+```cmd
+kubectl run probe-test ^
+  --rm -it ^
+  --image=curlimages/curl ^
+  --restart=Never ^
+  -n cloudnativeecommerce ^
+  -- curl -v http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/healthz
+```
+
+Expected:
+
+```text
+HTTP/1.1 200 OK
+```
+
+Do NOT hard-code an old node IP such as `10.224.0.4`.
+
+Node IPs can change after rebuilding AKS.
+
+---
+
+# 31. ImagePullBackOff Troubleshooting
+
+If Pods show:
+
+```text
+ImagePullBackOff
+ErrImagePull
+```
+
+First:
+
+```cmd
+kubectl describe pod <pod-name> -n cloudnativeecommerce
+```
+
+Look at the Events section.
+
+Then check:
+
+```cmd
+az aks show ^
+  --resource-group CloudNativeEcommerce-RG ^
+  --name cloudnativeecommerce-aks ^
+  --query "identity"
+```
+
+Check Terraform:
+
+```cmd
+terraform state list
+```
+
+The ACR role should exist:
+
+```text
+azurerm_role_assignment.aks_acr_pull
+```
+
+If the role already exists in Azure and Terraform reports:
+
+```text
+RoleAssignmentExists
+```
+
+do not create another role assignment.
+
+---
+
+# 32. Service Connectivity Troubleshooting
+
+Check endpoints:
+
+```cmd
+kubectl get endpoints -n cloudnativeecommerce
+```
+
+Check service:
+
+```cmd
+kubectl get svc -n cloudnativeecommerce
+```
+
+Check Pods:
+
+```cmd
+kubectl get pods -n cloudnativeecommerce -o wide
+```
+
+Test from inside the cluster:
+
+```cmd
+kubectl run debug-curl ^
+  --rm -it ^
+  --image=curlimages/curl ^
+  --restart=Never ^
+  -n cloudnativeecommerce ^
+  -- curl -v http://productservice:8080/health
+```
+
+This is better than guessing Pod IPs.
+
+Use Kubernetes Service DNS names:
+
+```text
+productservice
+identityservice
+orderservice
+mongodb
+rabbitmq
+sqlserver
+seq
+```
+
+---
+
+# 33. Logs
+
+Application:
+
+```cmd
+kubectl logs deployment/apigateway -n cloudnativeecommerce
+```
+
+```cmd
+kubectl logs deployment/identityservice -n cloudnativeecommerce
+```
+
+```cmd
+kubectl logs deployment/productservice -n cloudnativeecommerce
+```
+
+```cmd
+kubectl logs deployment/orderservice -n cloudnativeecommerce
+```
+
+Infrastructure:
+
+```cmd
+kubectl logs deployment/ingress-nginx-controller -n ingress-nginx
+```
+
+Follow logs:
+
+```cmd
+kubectl logs -f deployment/apigateway -n cloudnativeecommerce
+```
+
+---
+
+# 34. Rollouts
+
+Restart:
+
+```cmd
+kubectl rollout restart deployment/productservice ^
+  -n cloudnativeecommerce
+```
+
+Status:
+
+```cmd
+kubectl rollout status deployment/productservice ^
+  -n cloudnativeecommerce
+```
+
+History:
+
+```cmd
+kubectl rollout history deployment/productservice ^
+  -n cloudnativeecommerce
+```
+
+Rollback:
+
+```cmd
+kubectl rollout undo deployment/productservice ^
+  -n cloudnativeecommerce
+```
+
+---
+
+# 35. Helm Verification
+
+List releases:
+
+```cmd
+helm list -A
+```
+
+Application:
+
+```cmd
+helm status cloudnativeecommerce -n cloudnativeecommerce
+```
+
+Ingress:
+
+```cmd
+helm status ingress-nginx -n ingress-nginx
+```
+
+Ingress values:
+
+```cmd
+helm get values ingress-nginx -n ingress-nginx
+```
+
+Application rendered manifests:
+
+```cmd
+helm get manifest cloudnativeecommerce ^
+  -n cloudnativeecommerce
+```
+
+---
+
+# 36. Important Lessons From Problems We Encountered
+
+## Problem 1 – Docker build could not find .csproj
+
+Error:
+
+```text
+/src/ApiGateway/ApiGateway.csproj: not found
+```
+
+Cause:
+
+Dockerfile expected:
+
+```text
+src/ApiGateway/ApiGateway.csproj
+```
+
+Therefore the Docker build context must be the repository root.
+
+Correct pattern:
+
+```cmd
+docker build -t <image> ^
+  -f src\ApiGateway\Dockerfile .
+```
+
+The final `.` is important.
+
+---
+
+## Problem 2 – ImagePullBackOff
+
+Cause:
+
+AKS could not pull images from ACR.
+
+Fix:
+
+- images must exist in ACR
+- AKS kubelet identity needs `AcrPull`
+- use correct image names
+- restart Deployment after pushing `latest`
+
+---
+
+## Problem 3 – Terraform wanted to replace AKS
+
+Plan showed:
+
+```text
+-/+ destroy and then create replacement
+```
+
+Cause:
+
+Terraform configuration did not exactly match the existing AKS configuration.
+
+Lesson:
+
+Always inspect:
+
+```cmd
+terraform plan
+```
+
+before:
+
+```cmd
+terraform apply
+```
+
+---
+
+## Problem 4 – Resource Group would not delete
+
+Terraform reported:
+
+```text
+Resource Group still contains Resources
+```
+
+because a Key Vault existed that Terraform was not managing.
+
+Lesson:
+
+Before destroying a Resource Group:
+
+```cmd
+az resource list ^
+  --resource-group CloudNativeEcommerce-RG ^
+  -o table
+```
+
+Check for resources outside Terraform state.
+
+---
+
+## Problem 5 – Public IP changed after rebuild
+
+Old IP:
+
+```text
+<OLD_IP>
+```
+
+New cluster:
+
+```text
+<NEW_IP>
+```
+
+Lesson:
+
+Never hard-code Azure public IPs in the KT.
+
+Always retrieve the new IP:
+
+```cmd
+kubectl get svc -n ingress-nginx
+```
+
+or Azure CLI.
+
+Then update hosts.
+
+---
+
+## Problem 6 – cloudnative.local stopped resolving
+
+Cause:
+
+Hosts/DNS still pointed at an old IP.
+
+Fix:
+
+Update:
+
+```text
+C:\Windows\System32\drivers\etc\hosts
+```
+
+with:
+
+```text
+<NEW_PUBLIC_IP> cloudnative.local
+```
+
+---
+
+## Problem 7 – External API timed out even though internal traffic worked
+
+Root cause:
+
+Azure Load Balancer HTTP health probe was hitting:
+
+```text
+/
+```
+
+ingress-nginx returned:
+
+```text
+404
+```
+
+Azure therefore marked the backend unhealthy.
+
+Permanent fix:
+
+```yaml
+service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```
+
+This is now stored in:
+
+```text
+ingress-nginx-values.yaml
+```
+
+and must always be passed to Helm.
+
+---
+
+## Problem 8 – Testing with an old Node IP
+
+A previous test used a node IP that belonged to the old cluster.
+
+Lesson:
+
+Do not assume:
+
+```text
+10.224.x.x
+```
+
+is still valid.
+
+Get the current node IP:
+
+```cmd
+kubectl get nodes -o wide
+```
+
+Prefer Service DNS instead:
+
+```text
+http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/healthz
+```
+
+---
+
+## Problem 9 – `az acr login` failed because Docker Desktop was unavailable
+
+Error:
+
+```text
+DOCKER_COMMAND_ERROR
+```
+
+Cause:
+
+Docker Desktop's Linux engine was not running.
+
+Fix:
+
+Start Docker Desktop and retry:
+
+```cmd
+az acr login --name cloudnativeecommerceacr67
+```
+
+---
+
+## Problem 10 – Helm transient HTTP/2 error
+
+Error:
+
+```text
+http2: client connection lost
+```
+
+Cause:
+
+Transient connection problem while Helm queried the cluster/release.
+
+Fix:
+
+Retry the Helm command before changing configuration.
+
+---
+
+# 37. Full "Start From Zero" Quick Checklist
+
+Use this section when everything has been destroyed.
+
+## Azure
+
+```cmd
+cd terraform
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+Then:
+
+```cmd
+terraform output
+```
+
+## AKS credentials
+
+```cmd
+az aks get-credentials ^
+  --resource-group CloudNativeEcommerce-RG ^
+  --name cloudnativeecommerce-aks ^
+  --overwrite-existing
+```
+
+Verify:
+
+```cmd
+kubectl get nodes
+```
+
+## ingress-nginx
+
+```cmd
+cd ..
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+```
+
+Install WITH values:
+
+```cmd
+helm upgrade --install ingress-nginx ingress-nginx ^
+  --repo https://kubernetes.github.io/ingress-nginx ^
+  --namespace ingress-nginx ^
+  --create-namespace ^
+  -f ingress-nginx-values.yaml
+```
+
+Verify:
+
+```cmd
+helm get values ingress-nginx -n ingress-nginx
+```
+
+## Docker / ACR
+
+Start Docker Desktop.
+
+```cmd
+az acr login --name cloudnativeecommerceacr67
+```
+
+Build and push all application images.
+
+## Application Helm
+
+```cmd
+helm upgrade --install cloudnativeecommerce ^
+  helm\cloudnativeecommerce ^
+  -n cloudnativeecommerce ^
+  --create-namespace
+```
+
+## Verify
+
+```cmd
+kubectl get pods -n cloudnativeecommerce
+kubectl get deployments -n cloudnativeecommerce
+kubectl get svc -n cloudnativeecommerce
+kubectl get ingress -n cloudnativeecommerce
+```
+
+## Public IP
+
+```cmd
+kubectl get svc ingress-nginx-controller -n ingress-nginx
+```
+
+Update hosts file:
+
+```text
+<NEW_PUBLIC_IP> cloudnative.local
+```
+
+Test:
+
+```cmd
+curl -v http://cloudnative.local/
+```
+
+---
+
+# 38. Daily Development Workflow
+
+If only C# code changed:
+
+```text
+C# change
+   ↓
+docker build
+   ↓
+docker push
+   ↓
+kubectl rollout restart
+   ↓
+kubectl rollout status
+```
+
+Commands:
+
+```cmd
+docker build -t <ACR>/<service>:latest -f src\<Service>\Dockerfile .
+docker push <ACR>/<service>:latest
+kubectl rollout restart deployment/<service> -n cloudnativeecommerce
+kubectl rollout status deployment/<service> -n cloudnativeecommerce
+```
+
+If Helm configuration changed:
+
+```cmd
+helm upgrade cloudnativeecommerce ^
+  helm\cloudnativeecommerce ^
+  -n cloudnativeecommerce
+```
+
+If ingress-nginx configuration changed:
+
+```cmd
+helm upgrade ingress-nginx ingress-nginx ^
+  --repo https://kubernetes.github.io/ingress-nginx ^
+  --namespace ingress-nginx ^
+  -f ingress-nginx-values.yaml
+```
+
+Do NOT manually modify the generated Service unless debugging.
+
+---
+
+# 39. Current Completed State
+
+Completed:
+
+- IdentityService
+- ProductService
+- OrderService
+- API Gateway / YARP
+- JWT Authentication
+- SQL Server
+- MongoDB
+- RabbitMQ
+- Docker
+- Docker Compose
+- Serilog
+- Seq
+- Health Checks
+- Retry Policies
+- Unit Testing
+- Kubernetes Deployments
+- Kubernetes Services
+- ConfigMaps
+- Secrets
+- Helm chart
+- ProductService scaling to 2 replicas
+- Terraform
+- Azure Resource Group
+- Azure Container Registry
+- Azure Kubernetes Service
+- AKS -> ACR `AcrPull`
+- ingress-nginx
+- Kubernetes Ingress
+- Azure Load Balancer
+- Azure health-probe fix
+- `cloudnative.local`
+- Docker image build/push flow
+- Rebuild procedure
+- Kubernetes troubleshooting procedure
+
+Next logical step:
+
+```text
+CI/CD
+```
+
+Target:
+
+```text
+Git push
+   ↓
+CI build/test
+   ↓
+Docker build
+   ↓
+Push images to ACR
+   ↓
+Helm deployment to AKS
+   ↓
+Rollout verification
+```
+
+---
+
+# 40. Golden Rules
+
+1. Always run `terraform plan` before `terraform apply` when infrastructure changes.
+2. Never approve an unexpected `-/+ destroy and create replacement`.
+3. Never hard-code AKS node IPs.
+4. Never hard-code the Azure ingress public IP in documentation.
+5. After AKS rebuild, retrieve the new public IP.
+6. Always install ingress-nginx with `ingress-nginx-values.yaml`.
+7. Never manually annotate the ingress-nginx Service once Helm owns the annotation.
+8. Always build Docker images from the repository root.
+9. If using `:latest`, use `imagePullPolicy: Always` and restart the Deployment after pushing.
+10. Use Kubernetes Service DNS names instead of Pod IPs.
+11. Use `kubectl describe` and Events for ImagePullBackOff.
+12. Use `kubectl get endpoints` for Service connectivity problems.
+13. Port-forwards stop when their terminal closes.
+14. Never store real credentials in this KT.
+15. Treat Terraform state as the source of truth for Azure resources managed by Terraform.
+16. Treat Helm values/templates as the source of truth for Kubernetes resources managed by Helm.
+17. If a resource exists in Azure but not Terraform state, investigate before destroying the Resource Group.
+18. After a full rebuild, verify nodes → ingress-nginx → ACR/images → application Helm → Pods → Services → Ingress → public IP → hosts file → external curl.
+
+---
+
+# 41. One-Page Rebuild Summary
+
+```text
+terraform apply
+        |
+        v
+az aks get-credentials
+        |
+        v
+kubectl get nodes
+        |
+        v
+helm install ingress-nginx
+        |
+        +-- ingress-nginx-values.yaml
+        |      |
+        |      +-- Azure probe = /healthz
+        |
+        v
+az acr login
+        |
+        v
+docker build
+        |
+        v
+docker push
+        |
+        v
+helm install cloudnativeecommerce
+        |
+        v
+kubectl get pods
+        |
+        v
+kubectl get ingress
+        |
+        v
+Get NEW Azure public IP
+        |
+        v
+Update Windows hosts:
+<NEW_IP> cloudnative.local
+        |
+        v
+curl http://cloudnative.local/
+        |
+        v
+DONE
+```
+
+This is the standard recovery path for the project.

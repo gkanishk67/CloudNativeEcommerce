@@ -35,8 +35,11 @@ spec:
       containers:
       - name: orderservice
 
-        image: cloudnativeecommerce-orderservice:latest
-        imagePullPolicy: Never
+        # image: cloudnativeecommerce-orderservice:latest
+        # imagePullPolicy: Never
+
+        image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 8080

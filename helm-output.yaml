@@ -1,0 +1,291 @@
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: identityservice-secret
+  namespace: cloudnativeecommerce
+type: Opaque
+stringData:
+  ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=IdentityDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True"
+  Jwt__Key: "THIS_IS_MY_SUPER_SECRET_KEY_12345"
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: productservice-config
+  namespace: cloudnativeecommerce
+data:
+  MongoDbSettings__ConnectionString: "mongodb://mongodb:27017"
+  MongoDbSettings__DatabaseName: "ProductDb"
+  MongoDbSettings__ProductsCollectionName: "Products"
+  Serilog__SeqServerUrl: "http://seq:5341"
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orderservice-config
+  namespace: cloudnativeecommerce
+data:
+  RabbitMQ__Host: "rabbitmq"
+  RabbitMQ__Queue: "order-created"
+  Serilog__SeqServerUrl: "http://seq:5341"
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identityservice-config
+  namespace: cloudnativeecommerce
+data:
+  Jwt__Issuer: "IdentityService"
+  Jwt__Audience: "CloudNativeEcommerce"
+  Serilog__SeqServerUrl: "http://seq:5341"
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway
+  namespace: cloudnativeecommerce
+spec:
+  selector:
+    app: apigateway
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: identityservice
+  namespace: cloudnativeecommerce
+spec:
+  selector:
+    app: identityservice
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice
+  namespace: cloudnativeecommerce
+spec:
+  selector:
+    app: orderservice
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: productservice
+  namespace: cloudnativeecommerce
+spec:
+  selector:
+    app: productservice
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway
+  namespace: cloudnativeecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: "cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identityservice
+  namespace: cloudnativeecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identityservice
+  template:
+    metadata:
+      labels:
+        app: identityservice
+    spec:
+      containers:
+        - name: identityservice
+          image: "cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          envFrom:
+            - configMapRef:
+                name: identityservice-config
+            - secretRef:
+                name: identityservice-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderservice
+  namespace: cloudnativeecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderservice
+  template:
+    metadata:
+      labels:
+        app: orderservice
+    spec:
+      containers:
+        - name: orderservice
+          image: "cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          envFrom:
+            - configMapRef:
+                name: orderservice-config
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+---
+# Source: cloudnativeecommerce/templates/cloudnativeecommerce.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productservice
+  namespace: cloudnativeecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productservice
+  template:
+    metadata:
+      labels:
+        app: productservice
+    spec:
+      containers:
+        - name: productservice
+          image: "cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          envFrom:
+            - configMapRef:
+                name: productservice-config
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3

@@ -50,8 +50,11 @@ spec:
       containers:
       - name: identityservice
 
-        image: cloudnativeecommerce-identityservice:latest
-        imagePullPolicy: Never
+        # image: cloudnativeecommerce-identityservice:latest
+        # imagePullPolicy: Never
+        
+        image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 8080

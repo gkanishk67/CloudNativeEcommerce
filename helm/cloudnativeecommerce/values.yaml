@@ -1,0 +1,30 @@
+namespace: cloudnativeecommerce
+
+services:
+  apigateway:
+    image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway
+    replicas: 1
+    healthCheck: false
+
+  identityservice:
+    image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice
+    replicas: 1
+    healthCheck: true
+
+  productservice:
+    image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice
+    replicas: 2
+    healthCheck: true
+
+  orderservice:
+    image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice
+    replicas: 1
+    healthCheck: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

@@ -1,0 +1,159 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: productservice-config
+  namespace: {{ .Values.namespace }}
+data:
+  MongoDbSettings__ConnectionString: "mongodb://mongodb:27017"
+  MongoDbSettings__DatabaseName: "ProductDb"
+  MongoDbSettings__ProductsCollectionName: "Products"
+  Serilog__SeqServerUrl: "http://seq:5341"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orderservice-config
+  namespace: {{ .Values.namespace }}
+data:
+  RabbitMQ__Host: "rabbitmq"
+  RabbitMQ__Queue: "order-created"
+  Serilog__SeqServerUrl: "http://seq:5341"
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: identityservice-secret
+  namespace: {{ .Values.namespace }}
+type: Opaque
+stringData:
+  ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=IdentityDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True"
+  Jwt__Key: "THIS_IS_MY_SUPER_SECRET_KEY_12345"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identityservice-config
+  namespace: {{ .Values.namespace }}
+data:
+  Jwt__Issuer: "IdentityService"
+  Jwt__Audience: "CloudNativeEcommerce"
+  Serilog__SeqServerUrl: "http://seq:5341"
+
+---
+
+{{- range $name, $service := .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Values.namespace }}
+spec:
+  replicas: {{ $service.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+    spec:
+      containers:
+        - name: {{ $name }}
+          image: "{{ $service.image }}:latest"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          resources:
+            requests:
+              cpu: {{ $.Values.resources.requests.cpu | quote }}
+              memory: {{ $.Values.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ $.Values.resources.limits.cpu | quote }}
+              memory: {{ $.Values.resources.limits.memory | quote }}
+
+{{- if eq $name "productservice" }}
+          envFrom:
+            - configMapRef:
+                name: productservice-config
+{{- end }}
+
+{{- if eq $name "orderservice" }}
+          envFrom:
+            - configMapRef:
+                name: orderservice-config
+{{- end }}
+
+{{- if eq $name "identityservice" }}
+          envFrom:
+            - configMapRef:
+                name: identityservice-config
+            - secretRef:
+                name: identityservice-secret
+{{- end }}
+
+{{- if $service.healthCheck }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+{{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Values.namespace }}
+spec:
+  selector:
+    app: {{ $name }}
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+
+{{- end }}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudnativeecommerce-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: cloudnative.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: apigateway
+                port:
+                  number: 8080

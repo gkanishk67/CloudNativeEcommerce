@@ -36,8 +36,11 @@ spec:
       containers:
       - name: productservice
 
-        image: cloudnativeecommerce-productservice:latest
-        imagePullPolicy: Never
+        # image: cloudnativeecommerce-productservice:latest
+        # imagePullPolicy: Never
+
+        image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 8080

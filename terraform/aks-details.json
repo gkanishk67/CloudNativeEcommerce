@@ -1,0 +1,241 @@
+{
+  "aadProfile": null,
+  "addonProfiles": null,
+  "agentPoolProfiles": [
+    {
+      "artifactStreamingProfile": null,
+      "availabilityZones": null,
+      "capacityReservationGroupId": null,
+      "count": 1,
+      "creationData": null,
+      "currentOrchestratorVersion": "1.36.2",
+      "eTag": "8b329a72-daa4-4f66-9251-699938c9bf1c",
+      "enableAutoScaling": false,
+      "enableEncryptionAtHost": false,
+      "enableFips": false,
+      "enableNodePublicIp": false,
+      "enableUltraSsd": false,
+      "gatewayProfile": null,
+      "gpuInstanceProfile": null,
+      "gpuProfile": null,
+      "hostGroupId": null,
+      "kubeletConfig": null,
+      "kubeletDiskType": "OS",
+      "linuxOsConfig": null,
+      "localDnsProfile": null,
+      "maxCount": null,
+      "maxPods": 250,
+      "messageOfTheDay": null,
+      "minCount": null,
+      "mode": "System",
+      "name": "nodepool1",
+      "networkProfile": null,
+      "nodeImageVersion": "AKSUbuntu-2404gen2containerd-202607.29.0",
+      "nodeLabels": null,
+      "nodePublicIpPrefixId": null,
+      "nodeTaints": null,
+      "orchestratorVersion": "1.36.2",
+      "osDiskSizeGb": 128,
+      "osDiskType": "Managed",
+      "osSku": "Ubuntu",
+      "osType": "Linux",
+      "podIpAllocationMode": null,
+      "podSubnetId": null,
+      "powerState": {
+        "code": "Running"
+      },
+      "provisioningState": "Succeeded",
+      "proximityPlacementGroupId": null,
+      "scaleDownMode": "Delete",
+      "scaleSetEvictionPolicy": null,
+      "scaleSetPriority": null,
+      "securityProfile": {
+        "enableSecureBoot": false,
+        "enableVtpm": false,
+        "sshAccess": "LocalUser"
+      },
+      "spotMaxPrice": null,
+      "status": null,
+      "tags": null,
+      "type": "VirtualMachineScaleSets",
+      "upgradeSettings": {
+        "drainTimeoutInMinutes": null,
+        "maxSurge": "10%",
+        "maxUnavailable": "0",
+        "nodeSoakDurationInMinutes": null,
+        "undrainableNodeBehavior": null
+      },
+      "virtualMachineNodesStatus": null,
+      "virtualMachinesProfile": null,
+      "vmSize": "Standard_B2s_v2",
+      "vnetSubnetId": null,
+      "windowsProfile": null,
+      "workloadRuntime": null
+    }
+  ],
+  "aiToolchainOperatorProfile": null,
+  "apiServerAccessProfile": null,
+  "autoScalerProfile": null,
+  "autoUpgradeProfile": {
+    "nodeOsUpgradeChannel": "NodeImage",
+    "upgradeChannel": null
+  },
+  "azureMonitorProfile": null,
+  "azurePortalFqdn": "cloudnativ-cloudnativeecomm-c56128-8t0hy289.portal.hcp.centralindia.azmk8s.io",
+  "bootstrapProfile": {
+    "artifactSource": "Direct",
+    "containerRegistryId": null
+  },
+  "currentKubernetesVersion": "1.36.2",
+  "disableLocalAccounts": false,
+  "diskEncryptionSetId": null,
+  "dnsPrefix": "cloudnativ-CloudNativeEcomm-c56128",
+  "eTag": "95980494-7ff3-48a4-86e7-ea63ed4c94d1",
+  "enableRbac": true,
+  "extendedLocation": null,
+  "fqdn": "cloudnativ-cloudnativeecomm-c56128-8t0hy289.hcp.centralindia.azmk8s.io",
+  "fqdnSubdomain": null,
+  "hostedSystemProfile": {
+    "enabled": false,
+    "nodeSubnetId": null,
+    "systemNodeSubnetId": null
+  },
+  "httpProxyConfig": null,
+  "id": "/subscriptions/c561286e-91f4-4193-8209-2c4f05d86851/resourcegroups/CloudNativeEcommerce-RG/providers/Microsoft.ContainerService/managedClusters/cloudnativeecommerce-aks",
+  "identity": {
+    "delegatedResources": null,
+    "principalId": "7b16e95c-8ca4-4f88-ac9c-4e6cab62d88a",
+    "tenantId": "6a4af1da-3140-44bf-9d94-ff8c41e4c793",
+    "type": "SystemAssigned",
+    "userAssignedIdentities": null
+  },
+  "identityProfile": {
+    "kubeletidentity": {
+      "clientId": "4ebeb824-2645-4b69-b04f-625e95879af7",
+      "objectId": "6c99f608-80b6-4b80-92b2-983a0f7ee45f",
+      "resourceId": "/subscriptions/c561286e-91f4-4193-8209-2c4f05d86851/resourcegroups/MC_CloudNativeEcommerce-RG_cloudnativeecommerce-aks_centralindia/providers/Microsoft.ManagedIdentity/userAssignedIdentities/cloudnativeecommerce-aks-agentpool"
+    }
+  },
+  "ingressProfile": null,
+  "kind": "Base",
+  "kubernetesVersion": "1.36.2",
+  "linuxProfile": {
+    "adminUsername": "azureuser",
+    "ssh": {
+      "publicKeys": [
+        {
+          "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAhxSpqoXEds5x7lPV1cuApLwVtWpXi8vEdCjtCeVR57G+v6Opw9qyJhIW/CzQT1RH8Nv1T/9rvLs114P8uamzVjrZ8xhzWDeK+OROehe8VLSoa6I77nQZt6vDRpUKtnekVOFy8m+X6IKcDwS2N9sCdfp/xbI9rZJnOLP+SJ14JJP1jlsFxLFNA3WrS3jXKDwYcoRVpvubLhtBTT7DEUW+r9pKhfdoOSSw94g5/3QfW1sWRgqtfNcLv0tCDuohwxn/atW/sPP5EoQYvbx5zSvd9DMwBI3a9e3J4X0uqObVOS9xs7IPbexTrSEBvgswzjKlSbWDBtyL2sgwOG6EFHw7"
+        }
+      ]
+    }
+  },
+  "location": "centralindia",
+  "maxAgentPools": 100,
+  "metricsProfile": {
+    "costAnalysis": {
+      "enabled": false
+    }
+  },
+  "name": "cloudnativeecommerce-aks",
+  "networkProfile": {
+    "advancedNetworking": null,
+    "dnsServiceIp": "10.0.0.10",
+    "ipFamilies": [
+      "IPv4"
+    ],
+    "loadBalancerProfile": {
+      "allocatedOutboundPorts": null,
+      "backendPoolType": "nodeIPConfiguration",
+      "effectiveOutboundIPs": [
+        {
+          "id": "/subscriptions/c561286e-91f4-4193-8209-2c4f05d86851/resourceGroups/MC_CloudNativeEcommerce-RG_cloudnativeecommerce-aks_centralindia/providers/Microsoft.Network/publicIPAddresses/97204c92-3faf-401b-9d3e-575a56a00756",
+          "resourceGroup": "MC_CloudNativeEcommerce-RG_cloudnativeecommerce-aks_centralindia"
+        }
+      ],
+      "enableMultipleStandardLoadBalancers": null,
+      "idleTimeoutInMinutes": null,
+      "managedOutboundIPs": {
+        "count": 1,
+        "countIpv6": null
+      },
+      "outboundIPs": null,
+      "outboundIpPrefixes": null
+    },
+    "loadBalancerSku": "standard",
+    "natGatewayProfile": null,
+    "networkDataplane": "azure",
+    "networkMode": null,
+    "networkPlugin": "azure",
+    "networkPluginMode": "overlay",
+    "networkPolicy": "none",
+    "outboundType": "loadBalancer",
+    "podCidr": "10.244.0.0/16",
+    "podCidrs": [
+      "10.244.0.0/16"
+    ],
+    "serviceCidr": "10.0.0.0/16",
+    "serviceCidrs": [
+      "10.0.0.0/16"
+    ],
+    "staticEgressGatewayProfile": null
+  },
+  "nodeProvisioningProfile": {
+    "defaultNodePools": null,
+    "mode": "Manual"
+  },
+  "nodeResourceGroup": "MC_CloudNativeEcommerce-RG_cloudnativeecommerce-aks_centralindia",
+  "nodeResourceGroupProfile": null,
+  "oidcIssuerProfile": {
+    "enabled": true,
+    "issuerUrl": "https://centralindia.oic.prod-aks.azure.com/6a4af1da-3140-44bf-9d94-ff8c41e4c793/41be5eed-3ca4-4241-8d2b-6ea0a559a19b/"
+  },
+  "podIdentityProfile": null,
+  "powerState": {
+    "code": "Running"
+  },
+  "privateFqdn": null,
+  "privateLinkResources": null,
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": null,
+  "resourceGroup": "CloudNativeEcommerce-RG",
+  "resourceUid": "6a76d754ab27ab00010649fe",
+  "securityProfile": {
+    "azureKeyVaultKms": null,
+    "customCaTrustCertificates": null,
+    "defender": null,
+    "imageCleaner": null,
+    "workloadIdentity": null
+  },
+  "serviceMeshProfile": null,
+  "servicePrincipalProfile": {
+    "clientId": "msi",
+    "secret": null
+  },
+  "sku": {
+    "name": "Base",
+    "tier": "Free"
+  },
+  "status": null,
+  "storageProfile": {
+    "blobCsiDriver": null,
+    "diskCsiDriver": {
+      "enabled": true
+    },
+    "fileCsiDriver": {
+      "enabled": true
+    },
+    "snapshotController": {
+      "enabled": true
+    }
+  },
+  "supportPlan": "KubernetesOfficial",
+  "systemData": null,
+  "tags": null,
+  "type": "Microsoft.ContainerService/ManagedClusters",
+  "upgradeSettings": null,
+  "windowsProfile": null,
+  "workloadAutoScalerProfile": {
+    "keda": null,
+    "verticalPodAutoscaler": null
+  }
+}

@@ -1,0 +1,2982 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:04:30Z"
+    generateName: apigateway-67954f98f5-
+    generation: 1
+    labels:
+      app: apigateway
+      pod-template-hash: 67954f98f5
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: apigateway-67954f98f5-lbjbl
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: apigateway-67954f98f5
+      uid: 1d8bf33e-1efd-4233-b84a-aa05d50e545d
+    resourceVersion: "92490"
+    uid: 04ab5bf4-2041-4176-86cd-0aa7b26d76b1
+  spec:
+    containers:
+    - image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest
+      imagePullPolicy: Always
+      name: apigateway
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cwhg7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    volumes:
+    - name: kube-api-access-cwhg7
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 100m
+      memory: 128Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 128Mi
+      containerID: containerd://2efa95eeb99de319739ed098c56a97c0ec2f2acb06e7a8c88c836bb7cd8bd68e
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest
+      imageID: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway@sha256:56bd62afca7fae64d2d8f613639336f6089d9b9f405d0e9e61854f04c8ccf909
+      lastState: {}
+      name: apigateway
+      ready: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:04:32Z"
+      user:
+        linux:
+          gid: 1654
+          supplementalGroups:
+          - 1654
+          uid: 1654
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cwhg7
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.177
+    podIPs:
+    - ip: 10.244.0.177
+    qosClass: Burstable
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 79m
+        memory: 128Mi
+    startTime: "2026-08-08T13:04:30Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:04:31Z"
+    generateName: identityservice-6645d4fb78-
+    generation: 1
+    labels:
+      app: identityservice
+      pod-template-hash: 6645d4fb78
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: identityservice-6645d4fb78-fhjw9
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: identityservice-6645d4fb78
+      uid: 0643007d-93cc-460a-981d-8832e7c1d612
+    resourceVersion: "92168"
+    uid: 1cec8f92-2d4e-4ef7-8191-63daebf79340
+  spec:
+    containers:
+    - envFrom:
+      - configMapRef:
+          name: identityservice-config
+      - secretRef:
+          name: identityservice-secret
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest
+      imagePullPolicy: Always
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 15
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 2
+      name: identityservice
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 2
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vp74b
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    volumes:
+    - name: kube-api-access-vp74b
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 100m
+      memory: 128Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 128Mi
+      containerID: containerd://1ed548ba4de2aee91f54e3021bf6b42c1cc8fb8c21fa6c05bdde67b77e4319f8
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest
+      imageID: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice@sha256:b40cb08c1edff286177a44e92dfe84dc3d96834329e39ef39cd152b9965dd6f6
+      lastState: {}
+      name: identityservice
+      ready: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:04:33Z"
+      user:
+        linux:
+          gid: 1654
+          supplementalGroups:
+          - 1654
+          uid: 1654
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vp74b
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.48
+    podIPs:
+    - ip: 10.244.0.48
+    qosClass: Burstable
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 79m
+        memory: 128Mi
+    startTime: "2026-08-08T13:04:31Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:04:32Z"
+    generateName: mongodb-5655758778-
+    generation: 1
+    labels:
+      app: mongodb
+      pod-template-hash: "5655758778"
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: mongodb-5655758778-qdltw
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: mongodb-5655758778
+      uid: 7a74f34c-ca81-4bc8-8886-df69ebb3d7f6
+    resourceVersion: "92201"
+    uid: 8d84f9db-14be-4155-a36c-1fde954935d0
+  spec:
+    containers:
+    - image: mongo
+      imagePullPolicy: Always
+      name: mongodb
+      ports:
+      - containerPort: 27017
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-9mx8h
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-9mx8h
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:33Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:45Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:45Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://e206777182186cac25f0ea5f9e4f2f73c2bf727198c8e7cc9b753e6ebee903aa
+      image: docker.io/library/mongo:latest
+      imageID: docker.io/library/mongo@sha256:e0ce8c35124d4a9f9785532d1f268f39e9728ffa1cb38f46fa482436424c4bd3
+      lastState: {}
+      name: mongodb
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:04:45Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-9mx8h
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.76
+    podIPs:
+    - ip: 10.244.0.76
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-08-08T13:04:32Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:03:17Z"
+    generateName: orderservice-555d9f9574-
+    generation: 1
+    labels:
+      app: orderservice
+      pod-template-hash: 555d9f9574
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: orderservice-555d9f9574-b2n5m
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: orderservice-555d9f9574
+      uid: be357cbc-1d97-43fb-a375-355d71a5dd29
+    resourceVersion: "91753"
+    uid: 124ecff6-fc96-4d28-90b7-de96b671a4ee
+  spec:
+    containers:
+    - envFrom:
+      - configMapRef:
+          name: orderservice-config
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest
+      imagePullPolicy: Always
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 15
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 2
+      name: orderservice
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 2
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-gxr8w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    volumes:
+    - name: kube-api-access-gxr8w
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 100m
+      memory: 128Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:17Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:17Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 128Mi
+      containerID: containerd://a28bc8cf49fef5796936f402f849a48779e397f4f86220e39418b8511fdc005a
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest
+      imageID: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice@sha256:5e73497275b5bf6fa8b1f894f3c388072711a6fa203088618c531ac4dca96536
+      lastState: {}
+      name: orderservice
+      ready: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:03:31Z"
+      user:
+        linux:
+          gid: 1654
+          supplementalGroups:
+          - 1654
+          uid: 1654
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-gxr8w
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.27
+    podIPs:
+    - ip: 10.244.0.27
+    qosClass: Burstable
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 79m
+        memory: 128Mi
+    startTime: "2026-08-08T13:03:17Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generateName: productservice-94d998f74-
+    generation: 1
+    labels:
+      app: productservice
+      pod-template-hash: 94d998f74
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: productservice-94d998f74-ztfnn
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: productservice-94d998f74
+      uid: facbf0f5-fabf-4887-87c3-a404e6885373
+    resourceVersion: "92040"
+    uid: 85b2b113-b46f-4190-9a72-1925eab9b3e8
+  spec:
+    containers:
+    - envFrom:
+      - configMapRef:
+          name: productservice-config
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+      imagePullPolicy: Always
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 15
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 2
+      name: productservice
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 2
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-qtm7n
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    volumes:
+    - name: kube-api-access-qtm7n
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 100m
+      memory: 128Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:04:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 128Mi
+      containerID: containerd://6959ba103a8b5d25a190ba02a695f44064b4c1fe4692a04aabb73eadbb5c18ae
+      image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+      imageID: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice@sha256:417817399f4370263b008b78b1b1974df5e46ad93a590f95d4f4b96e55f9dc7f
+      lastState:
+        terminated:
+          containerID: containerd://8f6d3887656f9fadea6ff52645ba9a941b6e07436d5d1ba5ed2fbae28ac22601
+          exitCode: 0
+          finishedAt: "2026-08-08T13:03:59Z"
+          reason: Completed
+          startedAt: "2026-08-08T13:03:57Z"
+      name: productservice
+      ready: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      restartCount: 3
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:04:25Z"
+      user:
+        linux:
+          gid: 1654
+          supplementalGroups:
+          - 1654
+          uid: 1654
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-qtm7n
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.17
+    podIPs:
+    - ip: 10.244.0.17
+    qosClass: Burstable
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 79m
+        memory: 128Mi
+    startTime: "2026-08-08T13:03:18Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generateName: rabbitmq-84ff84448f-
+    generation: 1
+    labels:
+      app: rabbitmq
+      pod-template-hash: 84ff84448f
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: rabbitmq-84ff84448f-csgm7
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: rabbitmq-84ff84448f
+      uid: 6bfd65c5-5e46-473b-9fbc-d5837ee8b52b
+    resourceVersion: "91781"
+    uid: 9c4297f5-a99c-4fac-bb26-f7f6736b3aa2
+  spec:
+    containers:
+    - image: rabbitmq:3-management
+      imagePullPolicy: IfNotPresent
+      name: rabbitmq
+      ports:
+      - containerPort: 5672
+        protocol: TCP
+      - containerPort: 15672
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kgpbz
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-kgpbz
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:19Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:41Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:41Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://27dc9fc17bb9e6aa175a40fd9389f282259bd9e6171aec20c90247b8ea3a5fe4
+      image: docker.io/library/rabbitmq:3-management
+      imageID: docker.io/library/rabbitmq@sha256:e582c0bc7766f3342496d8485efb5a1df782b5ce3886ad017e2eaae442311f69
+      lastState: {}
+      name: rabbitmq
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:03:41Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kgpbz
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.134
+    podIPs:
+    - ip: 10.244.0.134
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-08-08T13:03:18Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generateName: seq-f9dc8b47b-
+    generation: 1
+    labels:
+      app: seq
+      pod-template-hash: f9dc8b47b
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: seq-f9dc8b47b-pks2h
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: seq-f9dc8b47b
+      uid: 14c0dda7-062d-4660-87f0-827d958d3193
+    resourceVersion: "91786"
+    uid: b3ec0353-6dfe-40a2-9f5d-312e1bb9309e
+  spec:
+    containers:
+    - env:
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: SEQ_FIRSTRUN_NOAUTHENTICATION
+        value: "true"
+      image: datalust/seq:latest
+      imagePullPolicy: IfNotPresent
+      name: seq
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      - containerPort: 5341
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tggbc
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-tggbc
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:19Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:41Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:41Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:18Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://fa1f975774ab7e7a8b40b74a5d662c6b3b3aa9419f0ff6bb276485ca810b8c83
+      image: docker.io/datalust/seq:latest
+      imageID: docker.io/datalust/seq@sha256:91e93ff21b1e61f0bbd0854a633a94b925d771b227e98269c740079f5092f740
+      lastState: {}
+      name: seq
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:03:41Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tggbc
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.45
+    podIPs:
+    - ip: 10.244.0.45
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-08-08T13:03:18Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-08T13:03:19Z"
+    generateName: sqlserver-7f968954b7-
+    generation: 1
+    labels:
+      app: sqlserver
+      pod-template-hash: 7f968954b7
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: sqlserver-7f968954b7-nlngp
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: sqlserver-7f968954b7
+      uid: b4432e11-72b9-469d-ac4c-36dbba74a12e
+    resourceVersion: "91875"
+    uid: c35b7186-14b1-4743-be34-8da2e18ec1f8
+  spec:
+    containers:
+    - env:
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: MSSQL_PID
+        value: Developer
+      - name: SA_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: SA_PASSWORD
+            name: sqlserver-secret
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      imagePullPolicy: IfNotPresent
+      name: sqlserver
+      ports:
+      - containerPort: 1433
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cxznj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-cxznj
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:19Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:19Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:56Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:56Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-08T13:03:19Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://a1beb5abd8359f7e9265a69d845e36f051072c1e16facb1b528e25868582a236
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      imageID: mcr.microsoft.com/mssql/server@sha256:ba4c8329f48fb8f02e1416be6a930ebfd71268caee78aa985f3af4315e457c89
+      lastState: {}
+      name: sqlserver
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-08T13:03:56Z"
+      user:
+        linux:
+          gid: 10001
+          supplementalGroups:
+          - 10001
+          uid: 10001
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cxznj
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.212
+    podIPs:
+    - ip: 10.244.0.212
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-08-08T13:03:19Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-08-09T06:08:10Z"
+    generation: 1
+    labels:
+      run: test-curl
+      topology.kubernetes.io/region: centralindia
+      topology.kubernetes.io/zone: "0"
+    name: test-curl
+    namespace: cloudnativeecommerce
+    resourceVersion: "360056"
+    uid: 2577955a-fbef-4ada-ab45-15969f9a23b8
+  spec:
+    containers:
+    - args:
+      - sh
+      image: curlimages/curl
+      imagePullPolicy: Always
+      name: test-curl
+      resources: {}
+      stdin: true
+      stdinOnce: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bwjbc
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: aks-nodepool1-56450486-vmss000000
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-bwjbc
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-09T06:08:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-09T06:08:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-09T06:08:11Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-09T06:08:11Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-08-09T06:08:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://8a89f60d7c3373f70481c3176d5cbb812c6e370395af1bcc66470460da5f6830
+      image: docker.io/curlimages/curl:latest
+      imageID: docker.io/curlimages/curl@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
+      lastState: {}
+      name: test-curl
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-08-09T06:08:11Z"
+      user:
+        linux:
+          gid: 101
+          supplementalGroups:
+          - 101
+          uid: 100
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bwjbc
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.224.0.4
+    hostIPs:
+    - ip: 10.224.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.202
+    podIPs:
+    - ip: 10.244.0.202
+    qosClass: BestEffort
+    resources: {}
+    startTime: "2026-08-09T06:08:10Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"apigateway","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"port":8080,"targetPort":8080}],"selector":{"app":"apigateway"},"type":"ClusterIP"}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:04:30Z"
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: apigateway
+    namespace: cloudnativeecommerce
+    resourceVersion: "455002"
+    uid: eafc7af2-3642-4868-9473-19701e57757a
+  spec:
+    clusterIP: 10.0.157.49
+    clusterIPs:
+    - 10.0.157.49
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: apigateway
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"identityservice","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"port":8080,"targetPort":8080}],"selector":{"app":"identityservice"},"type":"ClusterIP"}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:04:31Z"
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: identityservice
+    namespace: cloudnativeecommerce
+    resourceVersion: "455004"
+    uid: cb655a3a-6cf9-46f8-ad1c-817c57662880
+  spec:
+    clusterIP: 10.0.178.84
+    clusterIPs:
+    - 10.0.178.84
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: identityservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"mongodb","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"port":27017,"targetPort":27017}],"selector":{"app":"mongodb"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-08-08T13:04:32Z"
+    name: mongodb
+    namespace: cloudnativeecommerce
+    resourceVersion: "92108"
+    uid: 224ae820-a97b-4826-83fb-b72f2bf3dfb7
+  spec:
+    clusterIP: 10.0.227.83
+    clusterIPs:
+    - 10.0.227.83
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 27017
+      protocol: TCP
+      targetPort: 27017
+    selector:
+      app: mongodb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"orderservice","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"port":8080,"targetPort":8080}],"selector":{"app":"orderservice"},"type":"ClusterIP"}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:03:17Z"
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: orderservice
+    namespace: cloudnativeecommerce
+    resourceVersion: "455005"
+    uid: 523fac81-5396-48cf-abd7-b979f8e7c635
+  spec:
+    clusterIP: 10.0.201.66
+    clusterIPs:
+    - 10.0.201.66
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: orderservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"productservice","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"port":8080,"targetPort":8080}],"selector":{"app":"productservice"},"type":"ClusterIP"}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: productservice
+    namespace: cloudnativeecommerce
+    resourceVersion: "455006"
+    uid: aabb3c83-f736-4d06-a8b6-fc09d64c421e
+  spec:
+    clusterIP: 10.0.47.175
+    clusterIPs:
+    - 10.0.47.175
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: productservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"rabbitmq","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"name":"amqp","port":5672,"targetPort":5672},{"name":"management","port":15672,"targetPort":15672}],"selector":{"app":"rabbitmq"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    name: rabbitmq
+    namespace: cloudnativeecommerce
+    resourceVersion: "91609"
+    uid: 798ef878-f150-45c1-ab88-279b1dd20531
+  spec:
+    clusterIP: 10.0.135.157
+    clusterIPs:
+    - 10.0.135.157
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: amqp
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
+    - name: management
+      port: 15672
+      protocol: TCP
+      targetPort: 15672
+    selector:
+      app: rabbitmq
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"seq","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"name":"ui","port":80,"targetPort":80},{"name":"ingestion","port":5341,"targetPort":5341}],"selector":{"app":"seq"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    name: seq
+    namespace: cloudnativeecommerce
+    resourceVersion: "91627"
+    uid: 5fde60fe-0c3a-42d6-b09a-17576c1bc2c2
+  spec:
+    clusterIP: 10.0.46.42
+    clusterIPs:
+    - 10.0.46.42
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: ui
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: ingestion
+      port: 5341
+      protocol: TCP
+      targetPort: 5341
+    selector:
+      app: seq
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"sqlserver","namespace":"cloudnativeecommerce"},"spec":{"ports":[{"port":1433,"targetPort":1433}],"selector":{"app":"sqlserver"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-08-08T13:03:19Z"
+    name: sqlserver
+    namespace: cloudnativeecommerce
+    resourceVersion: "91650"
+    uid: c650111d-9859-4c2c-bd02-8ec8560e6f68
+  spec:
+    clusterIP: 10.0.109.133
+    clusterIPs:
+    - 10.0.109.133
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 1433
+      protocol: TCP
+      targetPort: 1433
+    selector:
+      app: sqlserver
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"apigateway","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"apigateway"}},"template":{"metadata":{"labels":{"app":"apigateway"}},"spec":{"containers":[{"image":"cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest","imagePullPolicy":"Always","name":"apigateway","ports":[{"containerPort":8080}],"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}}]}}}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:04:30Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: apigateway
+    namespace: cloudnativeecommerce
+    resourceVersion: "455007"
+    uid: 9d91e56f-2643-471d-8791-f225617cb9f7
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: apigateway
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: apigateway
+      spec:
+        containers:
+        - image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest
+          imagePullPolicy: Always
+          name: apigateway
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:04:32Z"
+      lastUpdateTime: "2026-08-08T13:04:32Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:04:30Z"
+      lastUpdateTime: "2026-08-08T13:04:32Z"
+      message: ReplicaSet "apigateway-67954f98f5" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"identityservice","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"identityservice"}},"template":{"metadata":{"labels":{"app":"identityservice"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"identityservice-config"}},{"secretRef":{"name":"identityservice-secret"}}],"image":"cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":15,"periodSeconds":10,"timeoutSeconds":2},"name":"identityservice","ports":[{"containerPort":8080}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":2},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}}]}}}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:04:31Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: identityservice
+    namespace: cloudnativeecommerce
+    resourceVersion: "455009"
+    uid: 452d53ff-caf4-41eb-8481-0ad7ec7870b1
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: identityservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: identityservice
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: identityservice-config
+          - secretRef:
+              name: identityservice-secret
+          image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          name: identityservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:04:39Z"
+      lastUpdateTime: "2026-08-08T13:04:39Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:04:31Z"
+      lastUpdateTime: "2026-08-08T13:04:39Z"
+      message: ReplicaSet "identityservice-6645d4fb78" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"mongodb","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"mongodb"}},"template":{"metadata":{"labels":{"app":"mongodb"}},"spec":{"containers":[{"image":"mongo","name":"mongodb","ports":[{"containerPort":27017}]}]}}}}
+    creationTimestamp: "2026-08-08T13:04:32Z"
+    generation: 1
+    name: mongodb
+    namespace: cloudnativeecommerce
+    resourceVersion: "92205"
+    uid: 1cddc625-1c8e-45eb-8621-cb5949281bba
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mongodb
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: mongodb
+      spec:
+        containers:
+        - image: mongo
+          imagePullPolicy: Always
+          name: mongodb
+          ports:
+          - containerPort: 27017
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:04:45Z"
+      lastUpdateTime: "2026-08-08T13:04:45Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:04:32Z"
+      lastUpdateTime: "2026-08-08T13:04:45Z"
+      message: ReplicaSet "mongodb-5655758778" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"orderservice","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"orderservice"}},"template":{"metadata":{"labels":{"app":"orderservice"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"orderservice-config"}}],"image":"cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":15,"periodSeconds":10,"timeoutSeconds":2},"name":"orderservice","ports":[{"containerPort":8080}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":2},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}}]}}}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:03:17Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: orderservice
+    namespace: cloudnativeecommerce
+    resourceVersion: "455010"
+    uid: 35426850-67f2-4ab2-a767-cf5cfb006959
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: orderservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: orderservice
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: orderservice-config
+          image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          name: orderservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:03:37Z"
+      lastUpdateTime: "2026-08-08T13:03:37Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:03:17Z"
+      lastUpdateTime: "2026-08-08T13:03:37Z"
+      message: ReplicaSet "orderservice-555d9f9574" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"productservice","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"productservice"}},"template":{"metadata":{"labels":{"app":"productservice"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"productservice-config"}}],"image":"cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":15,"periodSeconds":10,"timeoutSeconds":2},"name":"productservice","ports":[{"containerPort":8080}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":2},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}}]}}}}
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generation: 4
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: productservice
+    namespace: cloudnativeecommerce
+    resourceVersion: "460240"
+    uid: 69c24ea0-cea8-459a-b6ae-c08926b0f2b9
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: productservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: productservice
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: productservice-config
+          image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          name: productservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:03:18Z"
+      lastUpdateTime: "2026-08-08T13:04:30Z"
+      message: ReplicaSet "productservice-94d998f74" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-08-09T12:18:31Z"
+      lastUpdateTime: "2026-08-09T12:18:31Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 4
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"rabbitmq","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"rabbitmq"}},"template":{"metadata":{"labels":{"app":"rabbitmq"}},"spec":{"containers":[{"image":"rabbitmq:3-management","name":"rabbitmq","ports":[{"containerPort":5672},{"containerPort":15672}]}]}}}}
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generation: 1
+    name: rabbitmq
+    namespace: cloudnativeecommerce
+    resourceVersion: "91785"
+    uid: 44b9dc36-d99d-40b4-9d26-2addae72991c
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: rabbitmq
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: rabbitmq
+      spec:
+        containers:
+        - image: rabbitmq:3-management
+          imagePullPolicy: IfNotPresent
+          name: rabbitmq
+          ports:
+          - containerPort: 5672
+            protocol: TCP
+          - containerPort: 15672
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:03:41Z"
+      lastUpdateTime: "2026-08-08T13:03:41Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:03:18Z"
+      lastUpdateTime: "2026-08-08T13:03:41Z"
+      message: ReplicaSet "rabbitmq-84ff84448f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"seq","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"seq"}},"template":{"metadata":{"labels":{"app":"seq"}},"spec":{"containers":[{"env":[{"name":"ACCEPT_EULA","value":"Y"},{"name":"SEQ_FIRSTRUN_NOAUTHENTICATION","value":"true"}],"image":"datalust/seq:latest","imagePullPolicy":"IfNotPresent","name":"seq","ports":[{"containerPort":80},{"containerPort":5341}]}]}}}}
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generation: 1
+    name: seq
+    namespace: cloudnativeecommerce
+    resourceVersion: "91790"
+    uid: 8d102a3d-2edb-454e-8516-82f05e832a96
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: seq
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: seq
+      spec:
+        containers:
+        - env:
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: SEQ_FIRSTRUN_NOAUTHENTICATION
+            value: "true"
+          image: datalust/seq:latest
+          imagePullPolicy: IfNotPresent
+          name: seq
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          - containerPort: 5341
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:03:41Z"
+      lastUpdateTime: "2026-08-08T13:03:41Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:03:18Z"
+      lastUpdateTime: "2026-08-08T13:03:41Z"
+      message: ReplicaSet "seq-f9dc8b47b" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"sqlserver","namespace":"cloudnativeecommerce"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"sqlserver"}},"template":{"metadata":{"labels":{"app":"sqlserver"}},"spec":{"containers":[{"env":[{"name":"ACCEPT_EULA","value":"Y"},{"name":"MSSQL_PID","value":"Developer"},{"name":"SA_PASSWORD","valueFrom":{"secretKeyRef":{"key":"SA_PASSWORD","name":"sqlserver-secret"}}}],"image":"mcr.microsoft.com/mssql/server:2022-latest","name":"sqlserver","ports":[{"containerPort":1433}]}]}}}}
+    creationTimestamp: "2026-08-08T13:03:19Z"
+    generation: 1
+    name: sqlserver
+    namespace: cloudnativeecommerce
+    resourceVersion: "91880"
+    uid: 8e3daa68-067a-41f6-9a16-6f746018012c
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: sqlserver
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: sqlserver
+      spec:
+        containers:
+        - env:
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: MSSQL_PID
+            value: Developer
+          - name: SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: SA_PASSWORD
+                name: sqlserver-secret
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          imagePullPolicy: IfNotPresent
+          name: sqlserver
+          ports:
+          - containerPort: 1433
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:03:56Z"
+      lastUpdateTime: "2026-08-08T13:03:56Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-08-08T13:03:19Z"
+      lastUpdateTime: "2026-08-08T13:03:56Z"
+      message: ReplicaSet "sqlserver-7f968954b7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:04:30Z"
+    generation: 1
+    labels:
+      app: apigateway
+      pod-template-hash: 67954f98f5
+    name: apigateway-67954f98f5
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: apigateway
+      uid: 9d91e56f-2643-471d-8791-f225617cb9f7
+    resourceVersion: "454826"
+    uid: 1d8bf33e-1efd-4233-b84a-aa05d50e545d
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: apigateway
+        pod-template-hash: 67954f98f5
+    template:
+      metadata:
+        labels:
+          app: apigateway
+          pod-template-hash: 67954f98f5
+      spec:
+        containers:
+        - image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-apigateway:latest
+          imagePullPolicy: Always
+          name: apigateway
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:04:31Z"
+    generation: 1
+    labels:
+      app: identityservice
+      pod-template-hash: 6645d4fb78
+    name: identityservice-6645d4fb78
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: identityservice
+      uid: 452d53ff-caf4-41eb-8481-0ad7ec7870b1
+    resourceVersion: "454834"
+    uid: 0643007d-93cc-460a-981d-8832e7c1d612
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: identityservice
+        pod-template-hash: 6645d4fb78
+    template:
+      metadata:
+        labels:
+          app: identityservice
+          pod-template-hash: 6645d4fb78
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: identityservice-config
+          - secretRef:
+              name: identityservice-secret
+          image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-identityservice:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          name: identityservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-08-08T13:04:32Z"
+    generation: 1
+    labels:
+      app: mongodb
+      pod-template-hash: "5655758778"
+    name: mongodb-5655758778
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: mongodb
+      uid: 1cddc625-1c8e-45eb-8621-cb5949281bba
+    resourceVersion: "92204"
+    uid: 7a74f34c-ca81-4bc8-8886-df69ebb3d7f6
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: mongodb
+        pod-template-hash: "5655758778"
+    template:
+      metadata:
+        labels:
+          app: mongodb
+          pod-template-hash: "5655758778"
+      spec:
+        containers:
+        - image: mongo
+          imagePullPolicy: Always
+          name: mongodb
+          ports:
+          - containerPort: 27017
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:03:17Z"
+    generation: 1
+    labels:
+      app: orderservice
+      pod-template-hash: 555d9f9574
+    name: orderservice-555d9f9574
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: orderservice
+      uid: 35426850-67f2-4ab2-a767-cf5cfb006959
+    resourceVersion: "454874"
+    uid: be357cbc-1d97-43fb-a375-355d71a5dd29
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: orderservice
+        pod-template-hash: 555d9f9574
+    template:
+      metadata:
+        labels:
+          app: orderservice
+          pod-template-hash: 555d9f9574
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: orderservice-config
+          image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-orderservice:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          name: orderservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: cloudnativeecommerce
+      meta.helm.sh/release-namespace: cloudnativeecommerce
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generation: 3
+    labels:
+      app: productservice
+      pod-template-hash: 94d998f74
+    name: productservice-94d998f74
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: productservice
+      uid: 69c24ea0-cea8-459a-b6ae-c08926b0f2b9
+    resourceVersion: "460239"
+    uid: facbf0f5-fabf-4887-87c3-a404e6885373
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: productservice
+        pod-template-hash: 94d998f74
+    template:
+      metadata:
+        labels:
+          app: productservice
+          pod-template-hash: 94d998f74
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: productservice-config
+          image: cloudnativeecommerceacr67.azurecr.io/cloudnativeecommerce-productservice:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          name: productservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 3
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generation: 1
+    labels:
+      app: rabbitmq
+      pod-template-hash: 84ff84448f
+    name: rabbitmq-84ff84448f
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: rabbitmq
+      uid: 44b9dc36-d99d-40b4-9d26-2addae72991c
+    resourceVersion: "91784"
+    uid: 6bfd65c5-5e46-473b-9fbc-d5837ee8b52b
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: rabbitmq
+        pod-template-hash: 84ff84448f
+    template:
+      metadata:
+        labels:
+          app: rabbitmq
+          pod-template-hash: 84ff84448f
+      spec:
+        containers:
+        - image: rabbitmq:3-management
+          imagePullPolicy: IfNotPresent
+          name: rabbitmq
+          ports:
+          - containerPort: 5672
+            protocol: TCP
+          - containerPort: 15672
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-08-08T13:03:18Z"
+    generation: 1
+    labels:
+      app: seq
+      pod-template-hash: f9dc8b47b
+    name: seq-f9dc8b47b
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: seq
+      uid: 8d102a3d-2edb-454e-8516-82f05e832a96
+    resourceVersion: "91789"
+    uid: 14c0dda7-062d-4660-87f0-827d958d3193
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: seq
+        pod-template-hash: f9dc8b47b
+    template:
+      metadata:
+        labels:
+          app: seq
+          pod-template-hash: f9dc8b47b
+      spec:
+        containers:
+        - env:
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: SEQ_FIRSTRUN_NOAUTHENTICATION
+            value: "true"
+          image: datalust/seq:latest
+          imagePullPolicy: IfNotPresent
+          name: seq
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          - containerPort: 5341
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-08-08T13:03:19Z"
+    generation: 1
+    labels:
+      app: sqlserver
+      pod-template-hash: 7f968954b7
+    name: sqlserver-7f968954b7
+    namespace: cloudnativeecommerce
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sqlserver
+      uid: 8e3daa68-067a-41f6-9a16-6f746018012c
+    resourceVersion: "91879"
+    uid: b4432e11-72b9-469d-ac4c-36dbba74a12e
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: sqlserver
+        pod-template-hash: 7f968954b7
+    template:
+      metadata:
+        labels:
+          app: sqlserver
+          pod-template-hash: 7f968954b7
+      spec:
+        containers:
+        - env:
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: MSSQL_PID
+            value: Developer
+          - name: SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: SA_PASSWORD
+                name: sqlserver-secret
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          imagePullPolicy: IfNotPresent
+          name: sqlserver
+          ports:
+          - containerPort: 1433
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: autoscaling/v2
+  kind: HorizontalPodAutoscaler
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"autoscaling/v2","kind":"HorizontalPodAutoscaler","metadata":{"annotations":{},"name":"orderservice-hpa","namespace":"cloudnativeecommerce"},"spec":{"maxReplicas":5,"metrics":[{"resource":{"name":"cpu","target":{"averageUtilization":50,"type":"Utilization"}},"type":"Resource"}],"minReplicas":1,"scaleTargetRef":{"apiVersion":"apps/v1","kind":"Deployment","name":"orderservice"}}}
+    creationTimestamp: "2026-08-08T13:03:17Z"
+    name: orderservice-hpa
+    namespace: cloudnativeecommerce
+    resourceVersion: "471474"
+    uid: 1aadf22a-49bd-4e52-9c44-4def3318ca4d
+  spec:
+    maxReplicas: 5
+    metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 50
+          type: Utilization
+      type: Resource
+    minReplicas: 1
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: orderservice
+  status:
+    conditions:
+    - lastTransitionTime: "2026-08-08T13:03:32Z"
+      message: recommended size matches current size
+      reason: ReadyForNewScale
+      status: "True"
+      type: AbleToScale
+    - lastTransitionTime: "2026-08-08T13:05:32Z"
+      message: the HPA was able to successfully calculate a replica count from cpu
+        resource utilization (percentage of request)
+      reason: ValidMetricFound
+      status: "True"
+      type: ScalingActive
+    - lastTransitionTime: "2026-08-08T13:05:32Z"
+      message: the desired count is within the acceptable range
+      reason: DesiredWithinRange
+      status: "False"
+      type: ScalingLimited
+    currentMetrics:
+    - resource:
+        current:
+          averageUtilization: 2
+          averageValue: 2m
+        name: cpu
+      type: Resource
+    currentReplicas: 1
+    desiredReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
